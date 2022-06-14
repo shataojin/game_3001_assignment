@@ -20,12 +20,38 @@ PlayScene::~PlayScene()
 void PlayScene::Draw()
 {
 	DrawDisplayList();
+
+
+	if (m_pAvoidance->IsEnabled()) {
+		Util::DrawLine(m_pAvoidance->GetTransform()->position,
+			m_pAvoidance->GetLeftLOSEndPoint(), m_pAvoidance->GetLineColor(0));
+		Util::DrawLine(m_pAvoidance->GetTransform()->position,
+			m_pAvoidance->GetMiddleLOSEndPoint(), m_pAvoidance->GetLineColor(1));
+		Util::DrawLine(m_pAvoidance->GetTransform()->position,
+			m_pAvoidance->GetRightLOSEndPoint(), m_pAvoidance->GetLineColor(2));
+	}
+
+
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
 
 void PlayScene::Update()
 {
 	UpdateDisplayList();
+
+	if (m_pAvoidance->IsEnabled())
+	{
+		DoWhiskerCollision();
+		CollisionManager::AABBCheck(m_pObstacle, m_pAvoidance);
+		if (!m_pAvoidance->GetRigidBody()->isColliding)
+		{
+			CollisionManager::CircleAABBCheck(m_pTarget, m_pAvoidance);
+		}
+
+		//dowhiskercollision();
+	}
+
+
 }
 
 void PlayScene::Clean()
@@ -161,6 +187,15 @@ void PlayScene::Start()
 	m_pStarship->SetTargetPosition(m_pTarget->GetTransform()->position);
 	AddChild(m_pStarship);
 	m_pStarship->SetEnabled(false);
+
+	m_pObstacle = new Obstacle();
+	AddChild(m_pObstacle);
+
+	m_pAvoidance = new avoidance();
+	m_pAvoidance->SetTargetPosition(m_pTarget->GetTransform()->position);
+	AddChild(m_pAvoidance);
+	m_pAvoidance->SetEnabled(false);
+
 	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
 }
@@ -234,12 +269,99 @@ void PlayScene::GUI_Function()
 
 	}
 
+
 	ImGui::Separator();
 
-	float max_speed = m_pStarship->getMaxSpeed();
-	if (ImGui::SliderFloat("max speed", &max_speed, 0.0f, 100.0f)) {
-		m_pStarship->setMaxSpeed(max_speed);
+	// Expose properties of ship
+	static float max_speed = m_pAvoidance->GetMaxSpeed();
+	if (ImGui::SliderFloat("Max Speed", &max_speed, 0.0f, 100.0f))
+	{
+		m_pAvoidance->SetMaxSpeed(max_speed);
 	}
+	static float acceleration = m_pAvoidance->GetAccelerationRate();
+	if (ImGui::SliderFloat("Acceleration Rate", &acceleration, 0.0f, 50.0f))
+	{
+		m_pAvoidance->SetAccelerationRate(acceleration);
+		m_pAvoidance->GetRigidBody()->acceleration = m_pAvoidance->GetCurrentDirection() * m_pAvoidance->GetAccelerationRate();
+	}
+	static float turn_rate = m_pAvoidance->GetTurnRate();
+	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
+	{
+		m_pAvoidance->SetTurnRate(turn_rate);
+	}
+
+	ImGui::Separator();
+
+	float AVODPosition[2] = { m_pAvoidance->GetTransform()->position.x, m_pAvoidance->GetTransform()->position.y };
+	if (ImGui::SliderFloat2("Ship Position", AVODPosition, 0.0f, 800.f))
+	{
+		m_pAvoidance->GetTransform()->position.x = AVODPosition[0];
+		m_pAvoidance->GetTransform()->position.y = AVODPosition[1];
+	}
+
+	if (ImGui::Button("Reset Ship Position"))
+	{
+		m_pAvoidance->Reset();
+		 AVODPosition[0] =m_pAvoidance->GetTransform()->position.x;
+		 AVODPosition[1] =m_pAvoidance->GetTransform()->position.y;
+	}
+
+	ImGui::Separator();
+	static bool toggle_Avoidaance = m_pAvoidance->IsEnabled();
+	if (ImGui::Checkbox("Toggle Avoidaance", &toggle_Avoidaance))
+	{
+		m_pAvoidance->SetEnabled(toggle_Avoidaance);
+	}
+
+	if (ImGui::Button("Reset Avoidaance"))
+	{
+		m_pAvoidance->Reset();
+		m_pAvoidance->GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+		m_pAvoidance->GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+		m_pAvoidance->GetRigidBody()->isColliding = false;
+		m_pAvoidance->SetMaxSpeed(20.0f);
+		m_pAvoidance->SetTurnRate(5.0f);
+		m_pAvoidance->SetAccelerationRate(2.0f);
+		m_pAvoidance->SetCurrentHeading(0.0f);
+		m_pAvoidance->SetEnabled(false);
+
+		toggle_seek = false;
+	}
+
 
 	ImGui::End();
 }
+
+
+void PlayScene::DoWhiskerCollision()
+{
+	SDL_Rect box =
+	{
+		(int)(m_pObstacle->GetTransform()->position.x - m_pObstacle->GetWidth() * 0.5f),
+		(int)(m_pObstacle->GetTransform()->position.y - m_pObstacle->GetHeight() * 0.5f),
+		(int)m_pObstacle->GetWidth(),(int)m_pObstacle->GetHeight()
+	};
+
+	SDL_Point ship_origin = { (int)m_pStarship->GetTransform()->position.x ,m_pStarship->GetTransform()->position.y };
+	SDL_Point left = { (int)m_pStarship->GetLeftLOSEndPoint().x ,(int)m_pStarship->GetLeftLOSEndPoint().y };
+	SDL_Point middle = { (int)m_pStarship->GetMiddleLOSEndPoint().x ,(int)m_pStarship->GetMiddleLOSEndPoint().y };
+	SDL_Point right = { (int)m_pStarship->GetRightLOSEndPoint().x ,(int)m_pStarship->GetRightLOSEndPoint().y };
+
+	bool collisions[3] = { 0,0,0 };
+
+	SDL_Point
+		ship = ship_origin;
+	collisions[0] = SDL_IntersectRectAndLine(&box, &ship.x, &ship.y, &left.x, &left.y);
+	ship = ship_origin;
+	collisions[1] = SDL_IntersectRectAndLine(&box, &ship.x, &ship.y, &middle.x, &middle.y);
+	ship = ship_origin;
+	collisions[2] = SDL_IntersectRectAndLine(&box, &ship.x, &ship.y, &right.x, &right.y);
+
+	for (unsigned i = 0; i < 3; i++)
+	{
+		m_pStarship->GetCollisionWhiskers()[i] = collisions[i];
+		m_pStarship->SetLineColor(i, (collisions[i] ? glm::vec4(1, 0, 0, 1) : glm::vec4(0, 1, 0, 1)));
+
+	}
+}
+

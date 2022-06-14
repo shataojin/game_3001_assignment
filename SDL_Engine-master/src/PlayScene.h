@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Target.h"
 #include "Starship.h"
+#include"Obstacle.h"
+#include"Avoidance.h"
 
 class PlayScene : public Scene
 {
@@ -25,10 +27,13 @@ private:
 	
 	Target* m_pTarget;
 	Starship* m_pStarship;
+	Obstacle* m_pObstacle;
+	avoidance* m_pAvoidance;
 	// Input Control
 	int m_pCurrentInputType{};
 	void GetPlayerInput();
 	void GetKeyboardInput();
+	void DoWhiskerCollision();
 };
 
 #endif /* defined (__PLAY_SCENE__) */

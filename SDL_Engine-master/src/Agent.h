@@ -24,6 +24,18 @@ public:
 	[[nodiscard]] float GetCurrentHeading() const;
 	[[nodiscard]] glm::vec4 GetLOSColour() const;
 
+
+	glm::vec2 GetLeftLOSEndPoint() const;
+	glm::vec2 GetMiddleLOSEndPoint() const;
+	glm::vec2 GetRightLOSEndPoint() const;
+	bool* GetCollisionWhiskers();
+	glm::vec4 GetLineColor(int index);
+	float GetWhiskerAngle()const;
+
+	glm::vec2 GetLeftLOSEndPointX() const;
+	glm::vec2 GetRightLOSEndPointX() const;
+
+
 	// setters
 	void SetTargetPosition(glm::vec2 new_position);
 	void SetCurrentDirection(glm::vec2 new_direction);
@@ -32,16 +44,42 @@ public:
 	void SetCurrentHeading(float heading);
 	void SetLOSColour(glm::vec4 colour);
 
-private:
-	void ChangeDirection();
-	float m_currentHeading;
-	glm::vec2 m_currentDirection;
-	glm::vec2 m_targetPosition;
 
-	// LOS
-	float m_LOSDistance;
-	bool m_hasLOS;
+
+	void SetLeftLOSEndPoint(glm::vec2 point);
+	void SetMiddleLOSEndPoint(glm::vec2 point);
+	void SetRightLOSEndPoint(glm::vec2 point);
+	void SetLineColor(int index, glm::vec4 color);
+	void SetWhiskerAngle(float angle);
+
+	void UpdateWhiskers(float angle);
+
+	void SetLeftLOSEndPointX(glm::vec2 point);
+	void SetRightLOSEndPointX(glm::vec2 point);
+
+private:
+	void ChangeDirection(); // From scalar to vec2.
+
+	float m_currentHeading; // Scalar angle in degrees.
+	glm::vec2 m_currentDirection; // Vec2 direction/angle.
+	glm::vec2 m_targetPosition; // Where the agent wants to be.
+
+	// LOS (line of sight)
+	float m_LOSDistance; // (Position + direction) * distance
+	bool m_hasLOS; // Used for collision.
 	glm::vec4 m_LOSColour;
+
+
+	//whisker properties
+	glm::vec2 m_leftLOSEEndPoint;
+	glm::vec2 m_middleLOSEndPoint;
+	glm::vec2 m_rightLOSEndPoint;
+	glm::vec4 m_lineColour[3];
+	bool m_collisionWhiskers[3];
+	float m_whiskerAnagle;
+
+	glm::vec2 m_leftLOSEEndPointX;
+	glm::vec2 m_rightLOSEndPointX;
 };
 
 

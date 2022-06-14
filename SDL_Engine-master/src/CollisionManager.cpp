@@ -17,10 +17,10 @@ bool CollisionManager::SquaredRadiusCheck(GameObject* object1, GameObject* objec
 	const glm::vec2 p1 = object1->GetTransform()->position;
 	const glm::vec2 p2 = object2->GetTransform()->position;
 
-	if (const int half_heights = static_cast<int>((object1->GetHeight() + object2->GetHeight()) * 0.5); 
-		SquaredDistance(p1, p2) < (half_heights * half_heights)) 
+	if (const int half_heights = static_cast<int>((object1->GetHeight() + object2->GetHeight()) * 0.5);
+		SquaredDistance(p1, p2) < (half_heights * half_heights))
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 			object2->GetRigidBody()->isColliding = true;
 
@@ -61,7 +61,7 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		p1.y + p1_height > p2.y
 		)
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 
 			object2->GetRigidBody()->isColliding = true;
@@ -84,8 +84,14 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		}
 		return false;
 	}
-	object2->GetRigidBody()->isColliding = false;
-	return false;
+
+	else
+	{
+		object2->GetRigidBody()->isColliding = false;
+		std::cout << "no collision" << std::endl;
+		return false;
+	}
+
 
 }
 
@@ -132,7 +138,7 @@ bool CollisionManager::LineRectCheck(const glm::vec2 line_start, const glm::vec2
 
 	// if ANY of the above are true, the line
 	// has hit the rectangle
-	if (left || right || top || bottom) 
+	if (left || right || top || bottom)
 	{
 		return true;
 	}
@@ -269,10 +275,10 @@ bool CollisionManager::CircleAABBCheck(GameObject* object1, GameObject* object2)
 
 	// aabb
 
-	if (const auto box_start = object2->GetTransform()->position - glm::vec2(half_box_width, half_box_height); 
+	if (const auto box_start = object2->GetTransform()->position - glm::vec2(half_box_width, half_box_height);
 		CircleAABBSquaredDistance(circle_centre, circle_radius, box_start, object2->GetWidth(), object2->GetHeight()) <= (circle_radius * circle_radius))
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 			object2->GetRigidBody()->isColliding = true;
 
@@ -363,7 +369,7 @@ bool CollisionManager::LOSCheck(Agent* agent, const glm::vec2 end_point, const s
 		const auto height = static_cast<float>(object->GetHeight());
 		auto object_offset = glm::vec2(width * 0.5f, height * 0.5f);
 		const auto rect_start = object->GetTransform()->position - object_offset;
-		
+
 
 		switch (object->GetType())
 		{

@@ -10,6 +10,7 @@
 #include"Fleeing .h"
 #include"TargetOutlCircle.h"
 #include"Arrival.h"
+#include "Label.h"
 
 class PlayScene : public Scene
 {
@@ -36,6 +37,9 @@ private:
 	Seeking* m_pSeeking;
 	Fleeing* m_pFleeing;
 	Arrival* m_pArrival;
+	Label* m_pInstructionsLabel{};
+	Label* m_pInstructions{};
+
 	// Input Control
 	int m_pCurrentInputType{};
 	void GetPlayerInput();

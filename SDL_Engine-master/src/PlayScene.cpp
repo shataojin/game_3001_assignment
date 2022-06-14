@@ -61,6 +61,8 @@ void PlayScene::Update()
 			m_pArrival->setMaxSpeed(1.0f);
 		}
 	}
+
+
 }
 
 void PlayScene::Clean()
@@ -172,13 +174,47 @@ void PlayScene::GetKeyboardInput()
 
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_1))
 	{
-		Game::Instance().ChangeSceneState(SceneState::START);
+		m_pTarget->SetEnabled(true);
+		m_pSeeking->SetEnabled(true);
 	}
 
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_2))
 	{
-		Game::Instance().ChangeSceneState(SceneState::END);
+		m_pTarget->SetEnabled(true);
+		m_pFleeing->SetEnabled(true);
 	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_3))
+	{
+		m_pTarget->SetEnabled(true);
+		m_Ptargetoutcaircle->SetEnabled(true);
+		m_pArrival->SetEnabled(true);
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_4))
+	{
+		m_pTarget->SetEnabled(true);
+		m_pObstacle->SetEnabled(true);
+		m_pStarship->SetEnabled(true);
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_0))
+	{
+		m_pTarget->SetEnabled(false);
+		m_pStarship->SetEnabled(false);
+		m_Ptargetoutcaircle->SetEnabled(false);
+		m_pFleeing->SetEnabled(false);
+		m_pArrival->SetEnabled(false);
+		m_pObstacle->SetEnabled(false);
+		m_pSeeking->SetEnabled(false);
+
+	}
+	/*
+	m_pTarget->SetEnabled(true);	m_pTarget->SetEnabled(false);
+	m_pStarship->SetEnabled(true); m_pStarship->SetEnabled(false);
+	m_Ptargetoutcaircle->SetEnabled(true); m_Ptargetoutcaircle->SetEnabled(false);
+	m_pFleeing->SetEnabled(true); m_pFleeing->SetEnabled(false);
+	m_pArrival->SetEnabled(true); m_pArrival->SetEnabled(false);
+	m_pObstacle->SetEnabled(true); m_pObstacle->SetEnabled(false);
+	m_pSeeking->SetEnabled(true);	m_pSeeking->SetEnabled(false);
+	*/
 }
 
 void PlayScene::Start()
@@ -186,15 +222,30 @@ void PlayScene::Start()
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pInstructions = new Label("1 for seek ,2 for flee ,3 for arrive, ",
+		"Consolas", 20, blue, glm::vec2(400.0f, 40.0f));
+	m_pInstructions->SetParent(this);
+	AddChild(m_pInstructions);
+
+	m_pInstructionsLabel = new Label(" 4 for Avoidance ,0 for close all ",
+		"Consolas", 20, blue, glm::vec2(400.0f, 60.0f));
+	m_pInstructionsLabel->SetParent(this);
+	AddChild(m_pInstructionsLabel);
+
+
+
 	// Set Input Type
 	m_pCurrentInputType = static_cast<int>(InputType::KEYBOARD_MOUSE);
 
 	// Lab 2 Game Objects
 	m_pTarget = new Target();
 	AddChild(m_pTarget);
+	m_pTarget->SetEnabled(false);
 
 	m_Ptargetoutcaircle= new TargetOutlCircle();
 	AddChild(m_Ptargetoutcaircle);
+	m_Ptargetoutcaircle->SetEnabled(false);
 
 	m_pStarship = new Starship();
 	m_pStarship->SetTargetPosition(m_pTarget->GetTransform()->position);
@@ -213,6 +264,7 @@ void PlayScene::Start()
 
 	m_pObstacle = new Obstacle();
 	AddChild(m_pObstacle);
+	m_pObstacle->SetEnabled(false);
 
 	m_pSeeking = new Seeking();
 	m_pSeeking->SetTargetPosition(m_pTarget->GetTransform()->position);

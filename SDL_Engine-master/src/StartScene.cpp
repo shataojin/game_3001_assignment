@@ -37,10 +37,10 @@ void StartScene::HandleEvents()
 		Game::Instance().Quit();
 	}
 
-	if(EventManager::Instance().IsKeyDown(SDL_SCANCODE_1))
+	/*if(EventManager::Instance().IsKeyDown(SDL_SCANCODE_1))
 	{
 		Game::Instance().ChangeSceneState(SceneState::PLAY);
-	}
+	}*/
 }
 
 void StartScene::Start()

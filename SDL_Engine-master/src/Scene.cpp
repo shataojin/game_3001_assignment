@@ -77,12 +77,11 @@ void Scene::UpdateDisplayList()
 	std::sort(m_displayList.begin(), m_displayList.end(), SortObjects);
 	for (auto& display_object : m_displayList)
 	{
-		if (display_object != nullptr)
-		{
-			if (!display_object->IsEnabled())
-				break;
-			display_object->Update();
-		}
+		if (display_object == nullptr)
+			break;
+		if (!display_object->IsEnabled())
+			break;
+		display_object->Update();
 	}
 }
 

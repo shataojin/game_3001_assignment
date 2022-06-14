@@ -8,6 +8,8 @@
 #include"Obstacle.h"
 #include"seeking.h"
 #include"Fleeing .h"
+#include"TargetOutlCircle.h"
+#include"Arrival.h"
 
 class PlayScene : public Scene
 {
@@ -28,10 +30,12 @@ private:
 	
 	// Lab 2 Game Objects
 	Target* m_pTarget;
+	TargetOutlCircle* m_Ptargetoutcaircle;
 	Starship* m_pStarship;
 	Obstacle* m_pObstacle;
 	Seeking* m_pSeeking;
 	Fleeing* m_pFleeing;
+	Arrival* m_pArrival;
 	// Input Control
 	int m_pCurrentInputType{};
 	void GetPlayerInput();

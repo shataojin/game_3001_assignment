@@ -46,6 +46,21 @@ void PlayScene::Update()
 	
 		//dowhiskercollision();
 	}
+
+
+	if (m_pArrival->IsEnabled())
+	{
+		
+		if (CollisionManager::CircleAABBCheck(m_pArrival, m_Ptargetoutcaircle))
+		{
+			m_pArrival->setAccelerationRate(1.0f);
+		}
+		if (CollisionManager::CircleAABBCheck(m_pArrival, m_pTarget))
+		{
+			m_pArrival->setAccelerationRate(1.0f);
+			m_pArrival->setMaxSpeed(1.0f);
+		}
+	}
 }
 
 void PlayScene::Clean()
@@ -178,6 +193,9 @@ void PlayScene::Start()
 	m_pTarget = new Target();
 	AddChild(m_pTarget);
 
+	m_Ptargetoutcaircle= new TargetOutlCircle();
+	AddChild(m_Ptargetoutcaircle);
+
 	m_pStarship = new Starship();
 	m_pStarship->SetTargetPosition(m_pTarget->GetTransform()->position);
 	AddChild(m_pStarship);
@@ -188,6 +206,11 @@ void PlayScene::Start()
 	AddChild(m_pFleeing);
 	m_pFleeing->SetEnabled(false);
 
+	m_pArrival = new Arrival();
+	m_pArrival->SetTargetPosition(m_pTarget->GetTransform()->position);
+	AddChild(m_pArrival);
+	m_pArrival->SetEnabled(false);
+
 	m_pObstacle = new Obstacle();
 	AddChild(m_pObstacle);
 
@@ -196,9 +219,15 @@ void PlayScene::Start()
 	AddChild(m_pSeeking);
 	m_pSeeking->SetEnabled(false);
 
-	////load sounds
-	//SoundManager::Instance().Load("..Assets / audio / yay.ogg", "yay", SoundType::SOUND_SFX);
-	//SoundManager::Instance().Load("..Assets / audio / thunder.ogg", "boom", SoundType::SOUND_SFX);
+	//load sounds
+	SoundManager::Instance().Load("..Assets / audio / yay.ogg", "yay", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("..Assets / audio / thunder.ogg", "boom", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/Bgm.mp3", "Bgm", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().Load("../Assets/audio/open.wav", "open", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/close.wav", "close", SoundType::SOUND_SFX);
+	SoundManager::Instance().PlayMusic("Bgm", -1, 0);
+	SoundManager::Instance().SetMusicVolume(15);
+	SoundManager::Instance().SetSoundVolume(20);
 	//	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
 }
@@ -231,6 +260,14 @@ void PlayScene::GUI_Function()
 	static bool toggle_flee = m_pFleeing->IsEnabled();
 	if (ImGui::Checkbox("toggle flee", &toggle_flee)) {
 		m_pFleeing->SetEnabled(toggle_flee);
+	}
+
+	ImGui::Separator();
+
+	static bool toggle_arrival = m_pArrival->IsEnabled();
+	if (ImGui::Checkbox("Toggle arrival", &toggle_arrival))
+	{
+		m_pArrival->SetEnabled(toggle_arrival);
 	}
 
 	ImGui::Separator();

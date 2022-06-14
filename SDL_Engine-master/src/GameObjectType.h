@@ -17,6 +17,8 @@ enum class GameObjectType {
 	NEXT_BUTTON,
 	NUM_OF_TYPES,
 	SEEKING,
-	FLEEING
+	FLEEING,
+	ARRIVAL,
+	TARGETOUT
 };
 #endif /* defined (__GAME_OBJECT_TYPE__) */

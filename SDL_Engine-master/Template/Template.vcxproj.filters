@@ -51,9 +51,6 @@
     <ClCompile Include="..\src\TextureManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Player.cpp">
-      <Filter>Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\PlayScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -62,12 +59,6 @@
     </ClCompile>
     <ClCompile Include="..\src\Label.cpp">
       <Filter>UI Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Ship.cpp">
-      <Filter>Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Target.cpp">
-      <Filter>Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Renderer.cpp">
       <Filter>Singletons</Filter>
@@ -105,14 +96,8 @@
     <ClCompile Include="..\src\Sprite.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Plane.cpp">
-      <Filter>Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp">
       <Filter>Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Obstacle.cpp">
-      <Filter>Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Agent.cpp">
       <Filter>Core</Filter>
@@ -141,7 +126,25 @@
     <ClCompile Include="..\src\Starship.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Avoidance.cpp">
+    <ClCompile Include="..\src\Target.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Fleeing .cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Obstacle.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Plane.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Player.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\seeking.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ship.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,9 +173,6 @@
     <ClInclude Include="..\src\SceneState.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Player.h">
-      <Filter>Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\PlayerAnimationState.h">
       <Filter>Enums</Filter>
     </ClInclude>
@@ -193,12 +193,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Label.h">
       <Filter>UI Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Ship.h">
-      <Filter>Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Target.h">
-      <Filter>Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Transform.h">
       <Filter>Components</Filter>
@@ -251,17 +245,11 @@
     <ClInclude Include="..\src\Sprite.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Plane.h">
-      <Filter>Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\SoundType.h">
       <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ImGuiWindowFrame.h">
       <Filter>Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Obstacle.h">
-      <Filter>Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Agent.h">
       <Filter>Core</Filter>
@@ -299,7 +287,25 @@
     <ClInclude Include="..\src\Starship.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Avoidance.h">
+    <ClInclude Include="..\src\Target.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Fleeing .h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Obstacle.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Plane.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Player.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\seeking.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ship.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
   </ItemGroup>

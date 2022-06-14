@@ -19,7 +19,7 @@ public:
 private:
 	void Move();
 	void CheckBounds();
-
+	
 
 	glm::vec2 m_startPos;
 };

@@ -32,8 +32,6 @@ public:
 	glm::vec4 GetLineColor(int index);
 	float GetWhiskerAngle()const;
 
-	glm::vec2 GetLeftLOSEndPointX() const;
-	glm::vec2 GetRightLOSEndPointX() const;
 
 
 	// setters
@@ -46,17 +44,15 @@ public:
 
 
 
-	void SetLeftLOSEndPoint(glm::vec2 point);
+	void SetLeftLOSEndPoint(glm::vec2 point) ;
 	void SetMiddleLOSEndPoint(glm::vec2 point);
-	void SetRightLOSEndPoint(glm::vec2 point);
+	void SetRightLOSEndPoint(glm::vec2 point) ;
 	void SetLineColor(int index, glm::vec4 color);
 	void SetWhiskerAngle(float angle);
 
 	void UpdateWhiskers(float angle);
 
-	void SetLeftLOSEndPointX(glm::vec2 point);
-	void SetRightLOSEndPointX(glm::vec2 point);
-
+		
 private:
 	void ChangeDirection(); // From scalar to vec2.
 

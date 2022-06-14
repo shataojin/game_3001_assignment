@@ -6,7 +6,8 @@
 #include "Target.h"
 #include "Starship.h"
 #include"Obstacle.h"
-#include"Avoidance.h"
+#include"seeking.h"
+#include"Fleeing .h"
 
 class PlayScene : public Scene
 {
@@ -25,10 +26,12 @@ private:
 	void GUI_Function();
 	std::string m_guiTitle;
 	
+	// Lab 2 Game Objects
 	Target* m_pTarget;
 	Starship* m_pStarship;
 	Obstacle* m_pObstacle;
-	avoidance* m_pAvoidance;
+	Seeking* m_pSeeking;
+	Fleeing* m_pFleeing;
 	// Input Control
 	int m_pCurrentInputType{};
 	void GetPlayerInput();

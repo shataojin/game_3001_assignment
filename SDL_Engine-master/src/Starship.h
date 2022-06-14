@@ -1,10 +1,11 @@
 #pragma once
-#ifndef __Starship__
-#define __Starship__
+#ifndef __STARSHIP__
+#define __STARSHIP__
 
 #include "Agent.h"
 
-class Starship final : public Agent {
+class Starship final : public Agent
+{
 public:
 	Starship();
 	~Starship() override;
@@ -14,30 +15,32 @@ public:
 	virtual void Update() override;
 	virtual void Clean() override;
 
-	float getMaxSpeed() const;
-	float getTurnRate() const;
-	glm::vec2 getDesiredVelocity() const;
-	float getAccelerationRate() const;
+	// Getters and Setters
+	float GetMaxSpeed() const;
+	float GetTurnRate() const;
+	glm::vec2 GetDesiredVelocity() const;
+	float GetAccelerationRate() const;
 
-	void setMaxSpeed(float speed);
-	void setTurnRate(float angle);
-	void setDesiredVelocity(glm::vec2 target_position);
-	void setAccelerationRate(float rate);
+	void SetMaxSpeed(float speed);
+	void SetTurnRate(float angle);
+	void SetDesiredVelocity(glm::vec2 target_position);
+	void SetAccelerationRate(float rate);
 
-	void Reset();
+	// Others
+	void Seek();
 	void LookWhereIAmGoing(glm::vec2 target_direction);
-		void Seek();
+	void Reset();
+
 private:
-	void Move();
-	void CheckBounds();
 	float m_maxSpeed;
 	float m_turnRate;
 	glm::vec2 m_desiredVelocity;
 	float m_accelerationRate;
-
 	glm::vec2 m_startPos;
 
+	void Move();
+	void CheckBounds();
 };
 
 
-#endif /* defined (__Starship__) */
+#endif /* defined (__STARSHIP__) */

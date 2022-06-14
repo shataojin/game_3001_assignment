@@ -2,9 +2,9 @@
 #include "TextureManager.h"
 
 
-Target::Target() : m_startPos(glm::vec2(100.0f, 100.0f))
+Target::Target() : m_startPos( glm::vec2(100.0f, 100.0f) )
 {
-	TextureManager::Instance().Load("../Assets/textures/Circle.png", "circle");
+	TextureManager::Instance().Load("../Assets/textures/Circle.png","circle");
 
 	const auto size = TextureManager::Instance().GetTextureSize("circle");
 	SetWidth(static_cast<int>(size.x));

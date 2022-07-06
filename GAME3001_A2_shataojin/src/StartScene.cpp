@@ -100,9 +100,23 @@ void StartScene::HandleEvents()
 	{
 		if (HDown == true)
 		{
-
+			for (int i = 0; i <= 100; i++)
+			{
+				allpath();
+				if (i == 100)
+				{
+					shortpath();
+				}
+			}
+			
 		}
 	}
+
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_M))
+	{
+
+	}
+
 
 
 	//test

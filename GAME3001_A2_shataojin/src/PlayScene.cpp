@@ -1,4 +1,4 @@
-#include "PlayScene.h"
+﻿#include "PlayScene.h"
 #include "Game.h"
 #include "EventManager.h"
 #include "InputType.h"
@@ -167,6 +167,11 @@ void PlayScene::computeTileCosts()
 			break;
 		}
 		tile->SetTileCost(distance);
+		/*tilecost++;
+		std::cout << tilecost << std::endl;*/
+		std::cout<<distance<<std::endl;
+		/* std::cout<< abs(tile->GetGridPosition().x) << " , " << abs(tile->GetGridPosition().y) << std::endl;*/
+		std::cout<< dx <<" , "<< dy << std::endl;
 	}
 }
 
@@ -198,6 +203,8 @@ void PlayScene::Start()
 	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
 }
+
+
 
 void PlayScene::GUI_Function() 
 {
@@ -289,3 +296,10 @@ void PlayScene::GUI_Function()
 	}
 	ImGui::End();
 }
+
+
+//1，显示COST上的总和或每一步？
+//2，增加柔顺移动 lookingwhereiamgoing在坦克里应该有对应
+//3，在start 界面增加操作（查询A*在C++中作用）
+//4,增加背景音乐
+

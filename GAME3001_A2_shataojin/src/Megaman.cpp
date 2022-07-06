@@ -1,4 +1,4 @@
-#include "Megaman.h"
+﻿#include "Megaman.h"
 #include "TextureManager.h"
 #include "Util.h"
 #include "Game.h"
@@ -35,8 +35,8 @@ void Megaman::Draw()
 
 void Megaman::Update()
 {
-	/*Move();
-	CheckBounds();*/
+	Move();
+	/*CheckBounds();*/
 }
 
 void Megaman::Clean()
@@ -98,32 +98,32 @@ void Megaman::Seek()
 void Megaman::LookWhereIAmGoing(glm::vec2 target_direction)
 {
 	// Old version.
-	//const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
-	//if (abs(target_rotation) > m_turnRate) // Do I still need to rotate?
-	//{
-	//	SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
-	//}
-
-	// New for Lab 3 version 1. A bit jittery.
 	const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
-	if (GetCollisionWhiskers()[0])
-	{
-		SetCurrentHeading(GetCurrentHeading() + GetTurnRate());
-	}
-	else if (GetCollisionWhiskers()[2])
-	{
-		SetCurrentHeading(GetCurrentHeading() - GetTurnRate());
-	}
-	else if (abs(target_rotation) > m_turnRate)
+	if (abs(target_rotation) > m_turnRate) // Do I still need to rotate?
 	{
 		SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
 	}
-	UpdateWhiskers(GetWhiskerAngle()); // New for Lab 3.
+
+	//// New for Lab 3 version 1. A bit jittery.
+	//const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
+	//if (GetCollisionWhiskers()[0])
+	//{
+	//	SetCurrentHeading(GetCurrentHeading() + GetTurnRate());
+	//}
+	//else if (GetCollisionWhiskers()[2])
+	//{
+	//	SetCurrentHeading(GetCurrentHeading() - GetTurnRate());
+	//}
+	//else if (abs(target_rotation) > m_turnRate)
+	//{
+	//	SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
+	//}
+	//UpdateWhiskers(GetWhiskerAngle()); // New for Lab 3.
 }
 
 void Megaman::Move()
 {
-	Seek(); // Get our target for this frame.
+	//Seek(); // Get our target for this frame.
 
 	// Kinematic equation: final_position = position + velocity * time + 0.5*acceleration * time*time
 	auto delta_time = Game::Instance().GetDeltaTime();
@@ -156,3 +156,8 @@ void Megaman::Reset()
 {
 	GetTransform()->position = m_startPos;
 }
+
+
+
+//将lokkingwhere i am going中的寻找两条线做反方向运作，让船头指向目标并停止旋转，然后移动至目标
+//在paly cpp中增加设定移动

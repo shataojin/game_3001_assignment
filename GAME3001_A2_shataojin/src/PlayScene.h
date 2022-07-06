@@ -35,7 +35,12 @@ private:
 	void GetKeyboardInput();
 
 	void computeTileCosts();
+
+	int tilecost = 0;
 	Heuristic m_currentHeristic;
+
+
+	void m_displayPathList();
 };
 
 #endif /* defined (__PLAY_SCENE__) */

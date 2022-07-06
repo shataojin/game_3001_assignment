@@ -22,13 +22,15 @@ public:
 	static void ClearPath();
 	static void ClearLists();
 
+	static std::vector<PathConnection*>s_path;
+
 private:
 	PathManager() = default;
 	~PathManager() = default;
 private:
 	static std::vector<NodeRecord*> s_open;
 	static std::vector<NodeRecord*> s_closed;
-	static std::vector<PathConnection*>s_path;
+	
 	static std::vector<PathConnection*>s_allpath;
 };
 

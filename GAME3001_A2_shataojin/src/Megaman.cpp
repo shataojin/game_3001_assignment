@@ -98,31 +98,32 @@ void Megaman::Seek()
 void Megaman::LookWhereIAmGoing(glm::vec2 target_direction)
 {
 	// Old version.
-	const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
-	if (abs(target_rotation) > m_turnRate) // Do I still need to rotate?
-	{
-		SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
-	}
-
-	//// New for Lab 3 version 1. A bit jittery.
 	//const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
-	//if (GetCollisionWhiskers()[0])
-	//{
-	//	SetCurrentHeading(GetCurrentHeading() + GetTurnRate());
-	//}
-	//else if (GetCollisionWhiskers()[2])
-	//{
-	//	SetCurrentHeading(GetCurrentHeading() - GetTurnRate());
-	//}
-	//else if (abs(target_rotation) > m_turnRate)
+	//if (abs(target_rotation) > m_turnRate) // Do I still need to rotate?
 	//{
 	//	SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
 	//}
-	//UpdateWhiskers(GetWhiskerAngle()); // New for Lab 3.
+
+	// New for Lab 3 version 1. A bit jittery.
+	const auto target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
+	if (GetCollisionWhiskers()[0])
+	{
+		SetCurrentHeading(GetCurrentHeading() + GetTurnRate());
+	}
+	else if (GetCollisionWhiskers()[2])
+	{
+		SetCurrentHeading(GetCurrentHeading() - GetTurnRate());
+	}
+	else if (abs(target_rotation) > m_turnRate)
+	{
+		SetCurrentHeading(GetCurrentHeading() + GetTurnRate() * Util::Sign(target_rotation));
+	}
+	UpdateWhiskers(GetWhiskerAngle()); // New for Lab 3.
 }
 
 void Megaman::Move()
 {
+	//move seek for make it runs
 	//Seek(); // Get our target for this frame.
 
 	// Kinematic equation: final_position = position + velocity * time + 0.5*acceleration * time*time
@@ -149,6 +150,7 @@ void Megaman::Move()
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
 }
+
 
 void Megaman::CheckBounds(){}
 

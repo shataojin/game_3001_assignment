@@ -164,7 +164,7 @@ void PlayScene::GetKeyboardInput()
 			std::cout << "cant get shortest path. one or more nodes are null" << std::endl;
 		}
 		SoundManager::Instance().PlaySound("yay", 0);
-		
+		computeTileCosts();
 	}
 
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_R))

@@ -114,7 +114,7 @@ void StartScene::HandleEvents()
 
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_M))
 	{
-
+		//unkonw crash after i added codes in this line
 	}
 
 
@@ -144,7 +144,7 @@ void StartScene::Start()
 	m_pStartLabel->SetParent(this);
 	AddChild(m_pStartLabel);
 
-	m_pInstructionsLabel = new Label("press H for debug view", "Consolas", 17, blue, glm::vec2(400.0f, 500.0f));
+	m_pInstructionsLabel = new Label("H_debug view,LEFT-click_Starting Tile,RIGHT-click_Goal Tile,F_ Shortest Path,M_Move Actor", "Consolas", 17, blue, glm::vec2(400.0f, 500.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel);
 

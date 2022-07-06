@@ -1,7 +1,9 @@
 #include "PathManager.h"
 #include"Util.h"
+
 void PathManager::GetShortestPath(PathNode* start, PathNode* goal) // Updated for Lab 5.
 {
+	
 	// Clear the path.
 	ClearPath();
 	// Initialize the current node record used in the aalgorithm.
@@ -27,6 +29,7 @@ void PathManager::GetShortestPath(PathNode* start, PathNode* goal) // Updated fo
 		// Loop through each connection in turn.
 		for (const auto& connection : connections)
 		{
+
 			// Get the cost estimate for the end node.
 			PathNode* endNode = connection->GetToNode();
 			NodeRecord* endNodeRecord;
@@ -82,8 +85,10 @@ void PathManager::GetShortestPath(PathNode* start, PathNode* goal) // Updated fo
 		// Reverse the path.
 		std::reverse(s_path.begin(), s_path.end());
 	}
+
 	// Clean up the NodeRecord lists.
 	ClearLists();
+	
 }
 
 NodeRecord* PathManager::GetSmallestNode()
@@ -97,6 +102,7 @@ NodeRecord* PathManager::GetSmallestNode()
 			smallest = current;
 		else if ((*current)->m_costSoFar == (*smallest)->m_costSoFar) // If equal, flip a coin!
 			smallest = (rand() % 2 ? current : smallest);
+
 	}
 	return (*smallest);
 }

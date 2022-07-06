@@ -38,13 +38,13 @@ void Tile::DrawNavigation()
 				auto offset = glm::vec2(GetWidth() / 2, GetHeight() / 2);
 				Util::DrawLine(connection->GetFromNode()->GetTile()->GetTransform()->
 					position + offset, connection->GetFromNode()->GetTile()->GetTransform()->position + offset,
-					glm::vec4(0, 0, 0, 1));
+					glm::vec4(0, 0, 0, 0));
 			}
 		}
 		
 
-		m_costLabel->Draw();
-		m_statusLabel->Draw();
+	/*	m_costLabel->Draw();
+		m_statusLabel->Draw();*/
 		switch (m_type)
 		{
 		case TileType::IMPASSABLE:

@@ -19,6 +19,7 @@ public:
 	virtual void Clean() override;
 	virtual void HandleEvents() override;
 	virtual void Start() override;
+	int tilecost = 0;
 private:
 	// IMGUI Function
 	void GUI_Function();
@@ -28,6 +29,8 @@ private:
 	TiledLevel* m_pLevel;
 	Megaman* m_pMegaman;
 	Target* m_pTarget;
+	Label* m_TextLabelss{};
+	Label* m_TextLabelsss{};
 
 	// Input Control
 	int m_pCurrentInputType{};
@@ -35,8 +38,8 @@ private:
 	void GetKeyboardInput();
 
 	void computeTileCosts();
+	char costnumber;
 
-	int tilecost = 0;
 	Heuristic m_currentHeristic;
 
 

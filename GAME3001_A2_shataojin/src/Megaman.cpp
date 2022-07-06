@@ -7,7 +7,7 @@
 Megaman::Megaman() : m_startPos( glm::vec2(300.0f, 500.0f) ),
 	m_maxSpeed(20.0f), m_turnRate(5.0f), m_accelerationRate(2.0f)
 {
-	TextureManager::Instance().Load("../Assets/textures/megaman_small.png","mm");
+	TextureManager::Instance().Load("../Assets/textures/PlayerRun4.png","mm");
 
 	const auto size = TextureManager::Instance().GetTextureSize("mm");
 	SetWidth(static_cast<int>(size.x));

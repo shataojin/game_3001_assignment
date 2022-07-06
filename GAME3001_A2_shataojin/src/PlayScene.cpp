@@ -8,7 +8,9 @@
 #include "Util.h"
 #include"PathNode.h"
 #include"PathManager.h"
-
+#include <iostream>
+#include <sstream>
+#include"PathManager.h"
 
 PlayScene::PlayScene()
 {
@@ -20,6 +22,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::Draw()
 {
+	
 	DrawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
@@ -27,6 +30,7 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
+	
 }
 
 void PlayScene::Clean()
@@ -145,7 +149,40 @@ void PlayScene::GetKeyboardInput()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_F))
+	{
+		m_pLevel->SetLabelsEnabled(true);
+		PathNode* startNode = m_pLevel->GetTile(m_pMegaman->GetGridPosition())->GetNode();
+		PathNode* goalNode = m_pLevel->GetTile(m_pTarget->GetGridPosition())->GetNode();
+		if (startNode != nullptr && goalNode != nullptr)
+		{
+			PathManager::GetShortestPath(startNode, goalNode);
+		}
+		else
+		{
+			std::cout << "cant get shortest path. one or more nodes are null" << std::endl;
+		}
+		SoundManager::Instance().PlaySound("yay", 0);
+		
+	}
+
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_R))
+	{
+		PathManager::ClearPath();
+		for (const auto tile : m_pLevel->GetLevel())
+		{
+			if (tile->GetTileType() == TileType::IMPASSABLE)continue;
+			tile->SetTileStatus(TileStatus::UNVISITED);
+		}
+		auto offset = glm::vec2(20, 20);
+		m_pTarget->GetTransform()->position = m_pLevel->GetTile(15, 11)->GetTransform()->position + offset;
+		m_pMegaman->GetTransform()->position = m_pLevel->GetTile(1, 3)->GetTransform()->position + offset;
+		SoundManager::Instance().PlaySound("thunder", 0);
+	}
+	
 }
+
 
 void PlayScene::computeTileCosts()
 {
@@ -167,16 +204,25 @@ void PlayScene::computeTileCosts()
 			break;
 		}
 		tile->SetTileCost(distance);
-		/*tilecost++;
-		std::cout << tilecost << std::endl;*/
-		std::cout<<distance<<std::endl;
-		/* std::cout<< abs(tile->GetGridPosition().x) << " , " << abs(tile->GetGridPosition().y) << std::endl;*/
-		std::cout<< dx <<" , "<< dy << std::endl;
+
+
+		//tilecost++;
+		//std::cout << tilecost << std::endl;
+		//std::cout<<distance<<std::endl;
+		// std::cout<< abs(tile->GetGridPosition().x) << " , " << abs(tile->GetGridPosition().y) << std::endl;
+		//std::cout<< dx <<" , "<< dy << std::endl;
+
+
+		std::cout << "(" << tile->GetGridPosition().x << ", " << tile->GetGridPosition().y << ")" << std::endl;
+
+	
 	}
 }
 
 void PlayScene::Start()
 {
+
+
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
@@ -199,6 +245,20 @@ void PlayScene::Start()
 	m_pMegaman->GetTransform()->position = m_pLevel->GetTile(1, 3)->GetTransform()->position + offset;
 	m_pMegaman->SetGridPosition(1.0f, 3.0f);
 	AddChild(m_pMegaman);
+
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_TextLabelss = new Label("Press F to find Shortest Path, R to reset the shortest path", "Consolas", 20, blue, glm::vec2(400.0f, 560.0f));
+	m_TextLabelss->SetParent(this);
+	AddChild(m_TextLabelss);
+
+	// preload sounds
+	SoundManager::Instance().Load("../Assets/audio/win.wav", "yay", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/died.wav", "thunder", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/Bgm_2.mp3", "Bgm_2", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().PlayMusic("Bgm_2", -1, 0);
+	SoundManager::Instance().SetMusicVolume(15);
+	SoundManager::Instance().SetSoundVolume(20);
+
 
 	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
@@ -293,6 +353,13 @@ void PlayScene::GUI_Function()
 			if (tile->GetTileType() == TileType::IMPASSABLE)continue;
 			tile->SetTileStatus(TileStatus::UNVISITED);
 		}
+	}
+
+
+	ImGui::Separator();
+	static bool toggle_seek = m_pMegaman->IsEnabled();
+	if (ImGui::Checkbox("toggle seek", &toggle_seek)) {
+		m_pMegaman->SetEnabled(toggle_seek);
 	}
 	ImGui::End();
 }

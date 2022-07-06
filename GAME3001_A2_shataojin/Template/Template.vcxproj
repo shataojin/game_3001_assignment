@@ -270,6 +270,7 @@
   <ItemGroup>
     <Text Include="..\Assets\data\level.txt" />
     <Text Include="..\Assets\data\leveldata.txt" />
+    <Text Include="..\Assets\data\starlevel.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\textures\megaman_small.png" />

@@ -325,6 +325,7 @@ void PlayScene::GUI_Function()
 	if (ImGui::Button("computer tile costs", { 208,20 }))
 	{
 		computeTileCosts();
+
 	}
 
 	ImGui::Separator();
@@ -336,6 +337,7 @@ void PlayScene::GUI_Function()
 		if (startNode != nullptr && goalNode != nullptr)
 		{
 			PathManager::GetShortestPath(startNode, goalNode);
+			
 		}
 		else
 		{

@@ -366,6 +366,9 @@
     <Text Include="..\Assets\data\leveldata.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="..\Assets\data\starlevel.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\textures\megaman_small.png">

@@ -11,6 +11,7 @@ class PathManager
 {
 public:
 	static void GetShortestPath(PathNode* start, PathNode* goal);
+	static void GetAllPath(PathNode* start, PathNode* goal);
 	static NodeRecord* GetSmallestNode();
 	static std::vector<NodeRecord*>& GetOpenList();
 	static std::vector<NodeRecord*>& GetClosedList();
@@ -28,6 +29,7 @@ private:
 	static std::vector<NodeRecord*> s_open;
 	static std::vector<NodeRecord*> s_closed;
 	static std::vector<PathConnection*>s_path;
+	static std::vector<PathConnection*>s_allpath;
 };
 
 

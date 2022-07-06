@@ -6,6 +6,10 @@
 #include "Label.h"
 #include "Ship.h"
 #include "Button.h"
+#include "TiledLevel.h"
+#include"Target.h"
+#include"Megaman.h"
+#include"Heuristic.h"
 
 class StartScene final : public Scene
 {
@@ -26,8 +30,15 @@ private:
 	Label* m_TextLabels{};
 	Label* m_TextID{};
 	Ship* m_pShip{};
-
+	TiledLevel* m_pLevel;
 	Button* m_pStartButton{};
+	Heuristic m_currentHeristic;
+	Megaman* m_pMegaman;
+	Target* m_pTarget;
+	void computeTileCosts();
+	void shortpath();
+	void allpath();
+	bool HDown=false;
 };
 
 #endif /* defined (__START_SCENE__) */

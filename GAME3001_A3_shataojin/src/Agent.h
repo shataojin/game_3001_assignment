@@ -4,8 +4,8 @@
 
 #include <glm/vec4.hpp>
 #include "NavigationObject.h"
-
-class Agent : public NavigationObject
+#include "Sprite.h"
+class Agent : public Sprite
 {
 public:
 	Agent();

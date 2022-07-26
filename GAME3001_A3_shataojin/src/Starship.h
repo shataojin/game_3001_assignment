@@ -3,7 +3,7 @@
 #define __STARSHIP__
 
 #include "Agent.h"
-
+#include "PlayerAnimationState.h"
 class Starship final : public Agent
 {
 public:
@@ -30,7 +30,7 @@ public:
 	void Seek();
 	void LookWhereIAmGoing(glm::vec2 target_direction);
 	void Reset();
-
+	void SetAnimationState(PlayerAnimationState new_state);
 	bool line = false;
 private:
 	float m_maxSpeed;
@@ -41,6 +41,12 @@ private:
 
 	void Move();
 	void CheckBounds();
+
+	std::vector<glm::vec2> m_patrolPath;
+	int m_waypoint;
+	PlayerAnimationState m_currentAnimationState;
+
+	void BuildAnimations();
 };
 
 

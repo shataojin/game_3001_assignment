@@ -55,6 +55,10 @@ private:
 
 	void m_clearNodes();
 	int m_pathNodeLOSDistance;
+	bool m_playerFacingRight;
+	int enemy_see_player = 0;
+	std::vector<glm::vec2> m_patrolPath;
+	int m_waypoint;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

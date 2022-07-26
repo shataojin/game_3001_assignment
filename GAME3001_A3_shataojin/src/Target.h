@@ -19,12 +19,15 @@ public:
 
 	void Reset();
 	void SetAnimationState(PlayerAnimationState new_state);
+	int player_speed = 5;
 private:
 	void Move();
 	void CheckBounds();
 	void BuildAnimations();
 	PlayerAnimationState m_currentAnimationState;
 	glm::vec2 m_startPos;
+
+
 };
 
 

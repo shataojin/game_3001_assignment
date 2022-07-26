@@ -6,7 +6,7 @@ Target::Target(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 {
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/atlas.png",
+		"../Assets/sprites/24242424.png",
 		"spritesheet");
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
@@ -97,19 +97,42 @@ void Target::Move()
 {
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
 	{
-		GetTransform()->position.x = GetTransform()->position.x - 5.0f;
+		SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+		GetTransform()->position = GetTransform()->position + glm::vec2(-player_speed, 0.0f);
 	}
-	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
+	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
 	{
-		GetTransform()->position.x = GetTransform()->position.x +  5.0f;
+		SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+		GetTransform()->position = GetTransform()->position + glm::vec2(player_speed, 0.0f);
 	}
+	
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
 	{
-		GetTransform()->position.y = GetTransform()->position.y +  5.0f;
+		
+		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, -player_speed);
+
+		/*if (m_playerFacingRight)
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+		}
+		else
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+		}*/
 	}
-	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
+	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
 	{
-		GetTransform()->position.y = GetTransform()->position.y +  5.0f;
+		
+		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, player_speed);
+
+	/*	if (m_playerFacingRight)
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+		}
+		else
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+		}*/
 	}
 }
 

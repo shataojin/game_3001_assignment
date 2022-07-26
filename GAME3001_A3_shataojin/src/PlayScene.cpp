@@ -14,6 +14,8 @@
 #include "Config.h"
 #include <fstream>
 #include"PathManager.h"
+#include "CollisionManager.h"
+
 
 PlayScene::PlayScene()
 {
@@ -71,6 +73,41 @@ void PlayScene::HandleEvents()
 	GetPlayerInput();
 
 	GetKeyboardInput();
+
+	/// <summary>
+	/// for check bounds
+	/// </summary>
+	for (unsigned i = 0; i < m_pObstacles.size(); i++)
+	{
+		if (CollisionManager::AABBCheck(m_pTarget, m_pObstacles[i]))
+		{
+			///play sound
+		}
+
+	}
+
+	/// <summary>
+	/// for check LOS
+	/// </summary>
+	if(m_checkAgentLOS(m_pStarship, m_pTarget))
+	{
+		enemy_see_player++;
+		std::cout << "enemy see the player" << enemy_see_player << "times" << std::endl;
+	}
+
+	/// <summary>
+	/// for patrol move
+	/// </summary>
+	if (Util::Distance(m_patrolPath[m_waypoint], m_pStarship->GetTransform()->position) < 5)
+	{
+		
+		if (++m_waypoint == m_patrolPath.size())
+		{
+			
+			m_waypoint = 0;
+		}
+		/*m_pStarship->SetTargetPosition(m_patrolPath[m_waypoint]);*/
+	}
 }
 
 void PlayScene::GetPlayerInput()
@@ -160,6 +197,10 @@ void PlayScene::GetPlayerInput()
 
 void PlayScene::GetKeyboardInput()
 {
+
+	/// <summary>
+	/// for test base function
+	/// </summary>
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		Game::Instance().Quit();
@@ -216,6 +257,15 @@ void PlayScene::GetKeyboardInput()
 		std::cout << "enemy states changed" << std::endl;
 	}
 
+	
+	if (EventManager::Instance().MousePressed(SDL_BUTTON_LEFT))
+	{
+		//animation and sound
+	}
+	if (EventManager::Instance().MousePressed(SDL_BUTTON_RIGHT))
+	{
+		//animation and sound
+	}
 }
 
 void PlayScene::BuildObstaclePool()
@@ -316,6 +366,7 @@ bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
 		agent->SetHasLOS(has_LOS, LOSColour);
 	}
 	return has_LOS;
+	
 }
 
 bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object)
@@ -373,7 +424,7 @@ void PlayScene::Start()
 
 	// Setup a few more fields
 	m_LOSMode = LOSMode::TARGET;
-	m_pathNodeLOSDistance = 1000; // 1000px distance
+	m_pathNodeLOSDistance = 500; // 1000px distance
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	// Set Input Type
@@ -385,7 +436,8 @@ void PlayScene::Start()
 	AddChild(m_pTarget, 2);
 
 	m_pStarship = new Starship();
-	m_pStarship->GetTransform()->position = glm::vec2(150.0f, 300.0f);
+	m_pStarship->GetTransform()->position = glm::vec2(20.0f, 100.0f);
+	/*m_pStarship->SetTargetPosition(m_patrolPath[m_waypoint]);*/
 	AddChild(m_pStarship, 2);
 
 	// Add Obstacles
@@ -402,6 +454,12 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/audio/mutara.mp3", "BCsound", SoundType::SOUND_MUSIC);
 	SoundManager::Instance().SetMusicVolume(16);
 	SoundManager::Instance().PlayMusic("BCsound");
+
+	m_patrolPath.push_back(glm::vec2(600, 40)); // Top Right 
+	m_patrolPath.push_back(glm::vec2(600, 500)); // Bottom Right 
+	m_patrolPath.push_back(glm::vec2(40, 500)); // Bottom Left 
+	m_patrolPath.push_back(glm::vec2(40, 40)); // Top left
+	m_waypoint = 0;
 
 	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
@@ -524,4 +582,4 @@ void PlayScene::GUI_Function()
 ///直接画一个背景load到play画面 在0层
 ///记得换玩家图片
 /// 记得换声音
-/// 
+/// add sound to player move

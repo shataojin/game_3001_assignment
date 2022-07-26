@@ -103,7 +103,10 @@ void Starship::Draw()
 
 void Starship::Update()
 {
-	//Move();
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_M))
+	{
+			Move();
+	}
 	CheckBounds();
 }
 

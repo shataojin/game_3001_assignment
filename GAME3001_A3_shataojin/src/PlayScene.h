@@ -9,6 +9,7 @@
 #include "Target.h"
 #include "LOSMode.h"
 #include "TiledLevel.h"
+#include "Background.h"
 
 class PlayScene : public Scene
 {
@@ -34,6 +35,7 @@ private:
 	void GetKeyboardInput();
 
 	// Game Objects
+	Background* m_pbackground;
 	Target* m_pTarget;
 	Starship* m_pStarship;
 	TiledLevel* m_pLevel;

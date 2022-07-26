@@ -82,6 +82,8 @@ void PlayScene::HandleEvents()
 		if (CollisionManager::AABBCheck(m_pTarget, m_pObstacles[i]))
 		{
 			///play sound
+			SoundManager::Instance().PlaySound("died"); 
+				m_pTarget->player_speed = -5;
 		}
 
 	}
@@ -96,7 +98,7 @@ void PlayScene::HandleEvents()
 	}
 
 	/// <summary>
-	/// for patrol move
+	/// for patrol move(will crash the game)
 	/// </summary>
 	if (Util::Distance(m_patrolPath[m_waypoint], m_pStarship->GetTransform()->position) < 5)
 	{
@@ -247,8 +249,15 @@ void PlayScene::GetKeyboardInput()
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 	{
 		///Enemy lose hp(set hp in obj)
+		m_pStarship->hp = m_pStarship->hp - 5;
+		std::cout << "enemy hp: " << m_pStarship->hp << std::endl;
+		if (m_pStarship->hp < 0)
+		{
+			std::cout << "enemy died " << std::endl;
+			SoundManager::Instance().PlaySound("lose");
+		}
 		// take dmg sound
-		SoundManager::Instance().PlaySound("hurt");
+		SoundManager::Instance().PlaySound("died");
 	}
 
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P))
@@ -261,10 +270,16 @@ void PlayScene::GetKeyboardInput()
 	if (EventManager::Instance().MousePressed(SDL_BUTTON_LEFT))
 	{
 		//animation and sound
+		SoundManager::Instance().PlaySound("button");
+		//same as enemy
+		std::cout << "cc triger" << std::endl;
 	}
 	if (EventManager::Instance().MousePressed(SDL_BUTTON_RIGHT))
 	{
 		//animation and sound
+		SoundManager::Instance().PlaySound("button");
+		//same as enemy
+		std::cout << "lr triger" << std::endl;
 	}
 }
 
@@ -421,7 +436,9 @@ void PlayScene::Start()
 {
 	// Set GUI Title
 	m_guiTitle = "assiment 3";
-
+	//added bg
+	m_pbackground = new Background();
+	AddChild(m_pbackground, 0);
 	// Setup a few more fields
 	m_LOSMode = LOSMode::TARGET;
 	m_pathNodeLOSDistance = 500; // 1000px distance
@@ -447,11 +464,14 @@ void PlayScene::Start()
 	m_isGridEnabled = false;
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
-
 	// preload sounds
-	SoundManager::Instance().Load("../Assets/audio/yay.ogg", "yay", SoundType::SOUND_SFX);
-	SoundManager::Instance().Load("../Assets/audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
-	SoundManager::Instance().Load("../Assets/audio/mutara.mp3", "BCsound", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().Load("../Assets/audio/Button.wav", "button", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/win.wav", "move", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/died.wav", "died", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/lose.mp3", "lose", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/Button.wav", "button", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/win.mp3", "kill", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/Bgm_1.mp3", "BCsound", SoundType::SOUND_MUSIC);
 	SoundManager::Instance().SetMusicVolume(16);
 	SoundManager::Instance().PlayMusic("BCsound");
 

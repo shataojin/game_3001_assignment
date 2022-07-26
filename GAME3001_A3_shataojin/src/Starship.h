@@ -32,6 +32,7 @@ public:
 	void Reset();
 	void SetAnimationState(PlayerAnimationState new_state);
 	bool line = false;
+	int hp = 10;
 private:
 	float m_maxSpeed;
 	float m_turnRate;
@@ -47,6 +48,7 @@ private:
 	PlayerAnimationState m_currentAnimationState;
 
 	void BuildAnimations();
+	bool move = false;
 };
 
 

@@ -198,6 +198,23 @@ void PlayScene::GetKeyboardInput()
 
 		}
 	}
+	
+	
+	/// <summary>
+	/// for Debug Keys
+	/// </summary>
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
+	{
+		///Enemy lose hp(set hp in obj)
+		// take dmg sound
+		SoundManager::Instance().PlaySound("hurt");
+	}
+
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P))
+	{
+		//toggled enemy between idle and patrol.
+		std::cout << "enemy states changed" << std::endl;
+	}
 
 }
 
@@ -507,3 +524,4 @@ void PlayScene::GUI_Function()
 ///直接画一个背景load到play画面 在0层
 ///记得换玩家图片
 /// 记得换声音
+/// 

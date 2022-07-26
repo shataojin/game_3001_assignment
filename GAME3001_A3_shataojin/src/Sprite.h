@@ -6,8 +6,9 @@
 #include "Animation.h"
 #include <unordered_map>
 #include "SpriteSheet.h"
+#include"NavigationObject.h"
 
-class Sprite : public DisplayObject
+class Sprite : public NavigationObject
 {
 public:
 	Sprite();

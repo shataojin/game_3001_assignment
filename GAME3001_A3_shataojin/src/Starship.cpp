@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 #include "Game.h"
+#include"EventManager.h"
 
 Starship::Starship() : m_maxSpeed(20.0f),
 	m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPos( glm::vec2(300.0f, 500.0f) )
@@ -32,9 +33,25 @@ void Starship::Draw()
 	TextureManager::Instance().Draw("starship", GetTransform()->position, GetCurrentHeading(), 255, true);
 
 	// draw LOS
-	Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>( GetWidth()), 
-		GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H))
+	{
+		if (line == false)
+		{
+			line = true;
+		}
+		else
+		{
+			line = false;
+		}
+	}
+	if (line == true)
+	{
+		Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>(GetWidth()),
+			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	}
 }
+
+
 
 void Starship::Update()
 {

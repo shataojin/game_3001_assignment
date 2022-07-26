@@ -31,6 +31,7 @@ public:
 	void LookWhereIAmGoing(glm::vec2 target_direction);
 	void Reset();
 
+	bool line = false;
 private:
 	float m_maxSpeed;
 	float m_turnRate;

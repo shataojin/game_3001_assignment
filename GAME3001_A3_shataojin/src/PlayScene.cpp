@@ -174,6 +174,31 @@ void PlayScene::GetKeyboardInput()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_3))
+	{
+		SoundManager::Instance().PlaySound("yay");
+	}
+	
+
+
+	/// <summary>
+	/// for Debug View
+	/// </summary>
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H))
+	{
+		if (m_isGridEnabled == false)
+		{
+			m_isGridEnabled = true;
+			m_toggleGrid(m_isGridEnabled);
+		}
+		else
+		{
+			m_isGridEnabled = false;
+			m_toggleGrid(m_isGridEnabled);
+
+		}
+	}
+
 }
 
 void PlayScene::BuildObstaclePool()
@@ -357,6 +382,9 @@ void PlayScene::Start()
 	// preload sounds
 	SoundManager::Instance().Load("../Assets/audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/mutara.mp3", "BCsound", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().SetMusicVolume(16);
+	SoundManager::Instance().PlayMusic("BCsound");
 
 	/* DO NOT REMOVE */
 	ImGuiWindowFrame::Instance().SetGuiFunction([this] { GUI_Function(); });
@@ -471,3 +499,11 @@ void PlayScene::GUI_Function()
 
 	ImGui::End();
 }
+
+
+
+///play scene 
+////在OBs.cpp换图片障碍物图片 在1层
+///直接画一个背景load到play画面 在0层
+///记得换玩家图片
+/// 记得换声音

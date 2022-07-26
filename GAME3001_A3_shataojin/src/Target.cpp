@@ -1,6 +1,6 @@
 #include "Target.h"
 #include "TextureManager.h"
-
+#include"EventManager.h"
 
 Target::Target() : m_startPos( glm::vec2(600.0f, 100.0f) )
 {
@@ -37,7 +37,22 @@ void Target::Clean()
 
 void Target::Move()
 {
-	GetTransform()->position = GetTransform()->position + GetRigidBody()->velocity * 5.0f;
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
+	{
+		GetTransform()->position.x = GetTransform()->position.x - 5.0f;
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
+	{
+		GetTransform()->position.x = GetTransform()->position.x +  5.0f;
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
+	{
+		GetTransform()->position.y = GetTransform()->position.y -  5.0f;
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
+	{
+		GetTransform()->position.y = GetTransform()->position.y +  5.0f;
+	}
 }
 
 void Target::CheckBounds()

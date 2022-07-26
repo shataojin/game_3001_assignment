@@ -327,7 +327,7 @@ void PlayScene::m_clearNodes()
 void PlayScene::Start()
 {
 	// Set GUI Title
-	m_guiTitle = "Lab 6 - Part 2";
+	m_guiTitle = "assiment 3";
 
 	// Setup a few more fields
 	m_LOSMode = LOSMode::TARGET;

@@ -26,7 +26,6 @@ private:
 	void BuildAnimations();
 	PlayerAnimationState m_currentAnimationState;
 	glm::vec2 m_startPos;
-	bool faceingleft;
 
 
 };

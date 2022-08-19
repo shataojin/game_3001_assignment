@@ -5,8 +5,6 @@
 enum class LOSMode
 {
 	TARGET,
-	CCE,
-	RCE,
 	SHIP,
 	BOTH
 };

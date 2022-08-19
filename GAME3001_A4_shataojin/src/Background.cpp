@@ -4,15 +4,15 @@
 
 Background::Background()
 {
-	TextureManager::Instance().Load("../Assets/textures/nebula.png", "background");
+	TextureManager::Instance().Load("../Assets/textures/x.jpg", "bg");
 
-	const auto size = TextureManager::Instance().GetTextureSize("background");
+	auto size = TextureManager::Instance().GetTextureSize("bg");
 	SetWidth(size.x);
 	SetHeight(size.y);
 
-	GetTransform()->position = glm::vec2(size.x / 2, size.y / 2);
+	GetTransform()->position = glm::vec2(size.x/2, size.y/2);
 
-	SetType(GameObjectType::NONE);
+	SetType(GameObjectType::BG);
 	GetRigidBody()->isColliding = false;
 }
 
@@ -21,8 +21,8 @@ Background::~Background()
 
 void Background::Draw()
 {
-	TextureManager::Instance().Draw("background",
-		GetTransform()->position, 0, 255, true);
+	TextureManager::Instance().Draw("bg",
+		GetTransform()->position.x, GetTransform()->position.y, 0, 255, true);
 }
 
 void Background::Update()

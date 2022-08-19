@@ -31,6 +31,8 @@ public:
 	void LookWhereIAmGoing(glm::vec2 target_direction);
 	void Reset();
 	void SetAnimationState(PlayerAnimationState new_state);
+	bool line = false;
+	int hp = 10;
 private:
 	float m_maxSpeed;
 	float m_turnRate;
@@ -38,19 +40,15 @@ private:
 	float m_accelerationRate;
 	glm::vec2 m_startPos;
 
-	// New for Lab 7
-	std::vector<glm::vec2> m_patrolPath;
-	int m_wayPoint;
-	PlayerAnimationState m_currentAnimationState;
-	void BuildPatrolPath();
-
 	void Move();
 	void CheckBounds();
 
+	std::vector<glm::vec2> m_patrolPath;
+	int m_waypoint;
+	PlayerAnimationState m_currentAnimationState;
+
 	void BuildAnimations();
 	bool move = false;
-	bool facingleft;
-	int player_speed = 5.0f;
 };
 
 

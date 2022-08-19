@@ -1,12 +1,10 @@
 #include "Agent.h"
 
-#include "CollisionManager.h"
 #include "Util.h"
 
-Agent::Agent(): m_currentHeading(0.0f), m_LOSDistance(0.0f),
-                m_hasLOS(false), m_whiskerAngle(0.0f), m_state()
-{
-}
+Agent::Agent():m_currentHeading(0.0f), m_LOSDistance(0.0f),
+	m_hasLOS(false), m_whiskerAngle(0.0f)
+{ }
 
 Agent::~Agent()
 = default;
@@ -61,7 +59,7 @@ bool* Agent::GetCollisionWhiskers()
 	return m_collisionWhiskers; // Returns array by address.
 }
 
-glm::vec4 Agent::GetLineColor(const int index) const
+glm::vec4 Agent::GetLineColor(int index)
 {
 	return m_lineColor[index];
 }
@@ -69,26 +67,6 @@ glm::vec4 Agent::GetLineColor(const int index) const
 float Agent::GetWhiskerAngle() const
 {
 	return m_whiskerAngle;
-}
-
-ActionState Agent::GetActionState() const
-{
-	return m_state;
-}
-
-int Agent::GetHealth() const
-{
-	return m_health;
-}
-
-void Agent::SetHealth(const int value)
-{
-	m_health = value;
-}
-
-void Agent::TakeDamage(const int value)
-{
-	m_health -= value;
 }
 
 void Agent::SetTargetPosition(const glm::vec2 new_position)
@@ -129,32 +107,32 @@ void Agent::SetLOSColour(const glm::vec4 colour)
 	m_LOSColour = colour;
 }
 
-void Agent::SetLeftLOSEndPoint(const glm::vec2 point)
+void Agent::SetLeftLOSEndPoint(glm::vec2 point)
 {
 	m_leftLOSEndPoint = point;
 }
 
-void Agent::SetMiddleLOSEndPoint(const glm::vec2 point)
+void Agent::SetMiddleLOSEndPoint(glm::vec2 point)
 {
 	m_middleLOSEndPoint = point;
 }
 
-void Agent::SetRightLOSEndPoint(const glm::vec2 point)
+void Agent::SetRightLOSEndPoint(glm::vec2 point)
 {
 	m_rightLOSEndPoint = point;
 }
 
-void Agent::SetLineColor(const int index, const glm::vec4 color)
+void Agent::SetLineColor(int index, glm::vec4 color)
 {
 	m_lineColor[index] = color;
 }
 
-void Agent::SetWhiskerAngle(const float angle)
+void Agent::SetWhiskerAngle(float angle)
 {
 	m_whiskerAngle = angle;
 }
 
-void Agent::UpdateWhiskers(const float angle)
+void Agent::UpdateWhiskers(float angle)
 {
 	SetWhiskerAngle(angle);
 	SetMiddleLOSEndPoint(GetTransform()->position + GetCurrentDirection() * GetLOSDistance());
@@ -165,43 +143,7 @@ void Agent::UpdateWhiskers(const float angle)
 
 	x = sin((GetCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
 	y = cos((GetCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
-	SetRightLOSEndPoint(GetTransform()->position + glm::vec2(static_cast<float>(x), static_cast<float>(-y)) * (GetLOSDistance() * 0.75f));
-}
-
-void Agent::SetActionState(const ActionState state)
-{
-	m_state = state;
-}
-
-bool Agent::CheckAgentLOSToTarget(Agent* agent, DisplayObject* target_object, const std::vector<Obstacle*>& obstacles)
-{
-	bool has_LOS = false; // default - no LOS
-	SetHasLOS(has_LOS);
-
-	const auto target_direction = target_object->GetTransform()->position - GetTransform()->position;
-	const auto normalized_direction = Util::Normalize(target_direction); // points to the target - Vector of magnitude 1
-	SetMiddleLOSEndPoint(GetTransform()->position + normalized_direction * GetLOSDistance());
-
-	// if ship to target distance is less than or equal to the LOS Distance (Range)
-	const auto agent_to_range = Util::GetClosestEdge(GetTransform()->position, target_object);
-	if (agent_to_range <= GetLOSDistance())
-	{
-		// we are in range
-		std::vector<DisplayObject*> contact_list;
-		for (const auto obstacle : obstacles)
-		{
-			if (obstacle->GetType() == GameObjectType::NONE) { continue; }
-			const auto agent_to_object_distance = Util::GetClosestEdge(GetTransform()->position, obstacle);
-			if (agent_to_object_distance > agent_to_range) { continue; } // target is out of range
-
-			contact_list.push_back(obstacle);
-		}
-
-		has_LOS = CollisionManager::LOSCheck(agent, GetMiddleLOSEndPoint(), contact_list, target_object);
-	}
-	agent->SetHasLOS(has_LOS);
-
-	return has_LOS;
+	SetRightLOSEndPoint(GetTransform()->position + glm::vec2((float)x, (float)-y) * (GetLOSDistance() * 0.75f));
 }
 
 void Agent::ChangeDirection()

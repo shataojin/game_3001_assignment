@@ -6,7 +6,7 @@
 
 Obstacle::Obstacle()
 {
-	TextureManager::Instance().Load("../Assets/textures/nebula_cloud.png", "obstacle");
+	TextureManager::Instance().Load("../Assets/textures/ffaa.png", "obstacle");
 
 	const auto size = TextureManager::Instance().GetTextureSize("obstacle");
 	SetWidth(static_cast<int>(size.x));
@@ -16,6 +16,8 @@ Obstacle::Obstacle()
 
 	SetType(GameObjectType::OBSTACLE);
 	GetRigidBody()->isColliding = false;
+
+	//SoundManager::Instance().Load("../Assets/audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 }
 
 Obstacle::~Obstacle()

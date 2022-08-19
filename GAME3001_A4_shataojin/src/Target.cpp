@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 #include"EventManager.h"
 
-Target::Target() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
+Target::Target(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
@@ -50,7 +50,6 @@ void Target::Draw()
 			GetTransform()->position, 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	default:
-
 		break;
 	}
 }
@@ -98,44 +97,42 @@ void Target::Move()
 {
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
 	{
-		faceingleft = true;
 		SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
 		GetTransform()->position = GetTransform()->position + glm::vec2(-player_speed, 0.0f);
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
 	{
-		faceingleft = false;
 		SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
 		GetTransform()->position = GetTransform()->position + glm::vec2(player_speed, 0.0f);
 	}
-
+	
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
 	{
-
+		
 		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, -player_speed);
 
-		if (faceingleft==false)
+		/*if (m_playerFacingRight)
 		{
-			SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
 		}
 		else
 		{
-			SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
-		}
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+		}*/
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
 	{
-
+		
 		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, player_speed);
 
-		if (faceingleft == false)
-			{
-			SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
-			}
-			else
-			{
-			SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
-			}
+	/*	if (m_playerFacingRight)
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+		}
+		else
+		{
+			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+		}*/
 	}
 }
 

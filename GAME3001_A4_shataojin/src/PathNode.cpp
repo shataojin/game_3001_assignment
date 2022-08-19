@@ -19,16 +19,7 @@ PathNode::~PathNode()
 
 void PathNode::Draw()
 {
-	// draw node
-	if (HasLOS())
-	{
-		Util::DrawFilledRect(GetTransform()->position - glm::vec2(5, 5), GetWidth(), GetHeight(),
-			glm::vec4(0.0f, 0.75f, 0.0f, 1.0f));
-	}
-	else
-	{
-		Util::DrawRect(GetTransform()->position - glm::vec2(5, 5), GetWidth(), GetHeight(), GetLOSColour());
-	}
+	Util::DrawRect(GetTransform()->position - glm::vec2(5, 5), 10, 10, GetLOSColour());
 }
 
 void PathNode::Update()

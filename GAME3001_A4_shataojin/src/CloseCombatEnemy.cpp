@@ -205,7 +205,7 @@ void CloseCombatEnemy::Reset()
 {
 	GetTransform()->position = m_startPos;
 }
-
+//done patrol
 void CloseCombatEnemy::Patrol()
 {
 	if(GetActionState() != ActionState::PATROL)
@@ -215,16 +215,52 @@ void CloseCombatEnemy::Patrol()
 	}
 	Move();
 }
-
+//done move to player
 void CloseCombatEnemy::MoveToPlayer()
 {
-	(GetActionState() != ActionState::MOVE_TO_PLAYER)
+	auto scene = dynamic_cast<PlayScene*>(m_pScene);
+	if(GetActionState() != ActionState::MOVE_TO_PLAYER)
 	{
 		SetActionState(ActionState::MOVE_TO_PLAYER);
 	}
-	auto scene = dynamic_cast<PlayScene*>(m_pScene); // alias
-	SetTargetPosition(scene->GetTarget()->GetTransform()->position);
-	Move();
+
+	glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
+	
+	if (Util::Distance(target_direction, GetTransform()->position) < 10)
+	{
+		SetTargetPosition(target_direction);
+	}
+
+
+	SetDesiredVelocity(GetTargetPosition());
+
+	LookWhereIAmGoing(target_direction);
+
+	GetRigidBody()->acceleration = GetCurrentDirection() * GetAccelerationRate();
+
+	// Kinematic equation: final_position = position + velocity * time + 0.5*acceleration * time*time
+	const auto delta_time = Game::Instance().GetDeltaTime();
+
+	// compute the position term
+	const glm::vec2 initial_position = GetTransform()->position;
+
+	// compute the velocity term
+	const glm::vec2 velocity_term = GetRigidBody()->velocity * delta_time;
+
+	// compute the acceleration term
+	const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f;// *dt;
+
+
+	// compute the new position
+	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
+
+	GetTransform()->position = final_position;
+
+	// add our acceleration to velocity
+	GetRigidBody()->velocity += GetRigidBody()->acceleration;
+
+	// clamp our velocity at max speed
+	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
 
 
 }

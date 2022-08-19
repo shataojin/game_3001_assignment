@@ -5,10 +5,10 @@
 #include"EventManager.h"
 
 Starship::Starship() : m_maxSpeed(20.0f),
-m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPos(glm::vec2(300.0f, 500.0f))
-, m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
+	m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPos( glm::vec2(300.0f, 500.0f) )
+	, m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
-
+	
 
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
@@ -33,7 +33,7 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPos(glm::vec2(300.0f, 500.0f)
 	SetWhiskerAngle(45.0f);
 
 	SetLOSColour(glm::vec4(1, 0, 0, 1)); // default LOS colour is Red
-
+	
 	SetType(GameObjectType::AGENT);
 
 	// New for Lab 7
@@ -74,7 +74,7 @@ void Starship::Draw()
 	}
 
 	// draw LOS
-	Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>(GetWidth()),
+	Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>( GetWidth()), 
 		GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
 }
 
@@ -95,7 +95,7 @@ void Starship::Update()
 
 
 	// Determine which to action to perform
-	switch (GetActionState())
+	switch(GetActionState())
 	{
 	case ActionState::PATROL:
 		Move();
@@ -202,10 +202,10 @@ void Starship::SetAccelerationRate(const float rate)
 void Starship::Seek()
 {
 	// Find Next Waypoint if within 10px of the current waypoint
-	if (Util::Distance(m_patrolPath[m_wayPoint], GetTransform()->position) < 10)
+	if(Util::Distance(m_patrolPath[m_wayPoint], GetTransform()->position) < 10)
 	{
 		// check to see if you are at the last point in the path
-		if (++m_wayPoint == m_patrolPath.size())
+		if(++m_wayPoint == m_patrolPath.size())
 		{
 			// if so...reset
 			m_wayPoint = 0;
@@ -254,7 +254,7 @@ void Starship::BuildPatrolPath()
 
 void Starship::Move()
 {
-
+	
 	Seek(); // Get our target for this frame.
 
 	// Kinematic equation: final_position = position + velocity * time + 0.5*acceleration * time*time
@@ -282,7 +282,7 @@ void Starship::Move()
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
 }
 
-void Starship::CheckBounds() {}
+void Starship::CheckBounds(){}
 
 void Starship::Reset()
 {

@@ -6,13 +6,14 @@
 #include "Animation.h"
 #include <unordered_map>
 #include "SpriteSheet.h"
+#include"NavigationObject.h"
 
-class Sprite : public DisplayObject
+class Sprite : public NavigationObject
 {
 public:
 	Sprite();
 	virtual ~Sprite();
-	
+
 	// Life Cycle Functions
 	virtual void Draw() = 0;
 	virtual void Update() = 0;
@@ -21,7 +22,7 @@ public:
 	// getters
 	SpriteSheet* GetSpriteSheet();
 	Animation& GetAnimation(const std::string& name);
-	
+
 	// setters
 	void SetSpriteSheet(SpriteSheet* sprite_sheet);
 	void SetAnimation(const Animation& animation);

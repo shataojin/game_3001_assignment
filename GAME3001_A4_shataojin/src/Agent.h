@@ -7,7 +7,7 @@
 #include "ActionState.h"
 #include "NavigationObject.h"
 #include "Obstacle.h"
-
+#include "Sprite.h"
 class Agent : public Sprite
 {
 public:

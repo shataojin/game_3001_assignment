@@ -1,86 +1,65 @@
 #include "EventManager.h"
 #include <iostream>
 #include "Game.h"
-#include "WindowName.h"
 
-void EventManager::Reset()
+void EventManager::reset()
 {
     m_isActive = false;
     SDL_Delay(300);
     m_isActive = true;
 }
 
-void EventManager::Update()
+void EventManager::update()
 {
-    if (m_isActive)
-    {
+	if(m_isActive)
+	{
         m_io = ImGui::GetIO();
         m_mouseWheel = 0;
 
 
-        for (const auto controller : m_pGameControllers)
-        {
-            if (SDL_GameControllerGetAttached(controller->handle))
-            {
-                controller->Update();
-            }
-        }
+		for (auto controller : m_pGameControllers)
+		{
+			if(SDL_GameControllerGetAttached(controller->handle))
+			{
+                controller->update();
+			}
+		}
+		
+		SDL_Event event;
+	    while (SDL_PollEvent(&event))
+	    {
+	        switch (event.type)
+	        {
+	        case SDL_QUIT:
+	            TheGame::Instance()->quit();
+	            break;
 
-        SDL_Event event;
+	        case SDL_MOUSEMOTION:
+	            onMouseMove(event);
+	            break;
 
-        std::memcpy(m_keysLast, m_keysCurr, m_numKeys);
-        m_mouseLast = m_mouseCurrent;
+	        case SDL_MOUSEBUTTONDOWN:
+	            onMouseButtonDown(event);
+	            break;
 
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-                Game::Instance().Quit();
-                break;
+	        case SDL_MOUSEBUTTONUP:
+	            onMouseButtonUp(event);
+	            break;
 
-            case SDL_MOUSEMOTION:
-                OnMouseMove(event);
-                break;
-
-            case SDL_MOUSEBUTTONDOWN:
-                if(m_mainWindowHasFocus)
-                {
-                    OnMouseButtonDown(event);
-                }
-                break;
-
-            case SDL_MOUSEBUTTONUP:
-                if (m_mainWindowHasFocus)
-                {
-                    OnMouseButtonUp(event);
-                }
-                break;
-
-            case SDL_MOUSEWHEEL:
+	        case SDL_MOUSEWHEEL:
                 m_mouseWheel = event.wheel.y;
-                break;
+	            break;
 
             case SDL_TEXTINPUT:
                 m_io.AddInputCharactersUTF8(event.text.text);
                 break;
 
             case SDL_KEYDOWN:
-                OnKeyDown();
+	            onKeyDown();
 
-                if (event.key.keysym.sym == SDLK_BACKQUOTE)
+                if(event.key.keysym.sym == SDLK_BACKQUOTE)
                 {
                     m_isIMGUIActive = (m_isIMGUIActive) ? false : true;
-
-
-                    if (m_isIMGUIActive)
-                    {
-                        SDL_ShowWindow(ImGuiWindowFrame::Instance().GetWindow());
-                    }
-                    else
-                    {
-                        SDL_HideWindow(ImGuiWindowFrame::Instance().GetWindow());
-                    }
                 }
                 {
                     int key = event.key.keysym.scancode;
@@ -91,10 +70,10 @@ void EventManager::Update()
                     m_io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
                     m_io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
                 }
-                break;
+	            break;
 
-            case SDL_KEYUP:
-                OnKeyUp();
+	        case SDL_KEYUP:
+	            onKeyUp();
                 {
                     int key = event.key.keysym.scancode;
                     IM_ASSERT(key >= 0 && key < IM_ARRAYSIZE(m_io.KeysDown));
@@ -104,191 +83,155 @@ void EventManager::Update()
                     m_io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
                     m_io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
                 }
-                break;
+	            break;
 
             case SDL_CONTROLLERDEVICEADDED:
                 std::cout << "Controller Added " << std::endl;
-                InitializeControllers();
+                m_initializeControllers();
                 break;
 
             case SDL_CONTROLLERDEVICEREMOVED:
                 std::cout << "Controller Removed " << std::endl;
-                InitializeControllers();
+                m_initializeControllers();
                 break;
-            case SDL_WINDOWEVENT:
-                switch (event.window.event)
-                {
-                case SDL_WINDOWEVENT_CLOSE:
-                    if (ImGuiWindowFrame::Instance().GetWindowId() == event.window.windowID)
-                    {
-                        SDL_HideWindow(ImGuiWindowFrame::Instance().GetWindow());
-                        m_isIMGUIActive = false;
-                    }
-                    else
-                    {
-                        Game::Instance().Quit();
-                    }
-                    break;
-                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                
 
-                    m_mainWindowHasFocus = (ImGuiWindowFrame::Instance().GetWindowId() == event.window.windowID) ? false : true;
-
-                    break;
-
-	            case SDL_WINDOWEVENT_ENTER:
-            		SDL_RaiseWindow((event.window.windowID == static_cast<int>(WindowName::MAIN)) ? Game::Instance().GetWindow() : ImGuiWindowFrame::Instance().GetWindow());
-	                    break;
-	                }
-                break;
-
-
-            default:
-                break;
-            }
-        }
-
-        m_keysCurr = SDL_GetKeyboardState(&m_numKeys);
-        SDL_Point mouse_pos = { static_cast<int>(m_mousePosition.x), static_cast<int>(m_mousePosition.y) };
-        m_mouseCurrent = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+	        default:
+	            break;
+	        }
+	    }
 
         m_io.DeltaTime = 1.0f / 60.0f;
-        int mouse_x;
-        int mouse_y;
-        const int buttons = static_cast<int>(SDL_GetMouseState(&mouse_x, &mouse_y));
-        if(!m_mainWindowHasFocus)
-        {
-            m_io.MousePos = ImVec2(static_cast<float>(mouse_x), static_cast<float>(mouse_y));
-            m_io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-            m_io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
-            m_io.MouseWheel = static_cast<float>(m_mouseWheel);
+        int mouseX, mouseY;
+        const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+        m_io.MousePos = ImVec2(static_cast<float>(mouseX), static_cast<float>(mouseY));
+        m_io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
+        m_io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+        m_io.MouseWheel = static_cast<float>(m_mouseWheel);
 
-            m_io.DisplaySize.x = Config::SCREEN_WIDTH;
-            m_io.DisplaySize.y = Config::SCREEN_HEIGHT;
-        }
-        
+        m_io.DisplaySize.x = Config::SCREEN_WIDTH;
+        m_io.DisplaySize.y = Config::SCREEN_HEIGHT;
     }
 }
 
-void EventManager::Clean()
+void EventManager::clean()
 {
-    for (const auto& game_controller : m_pGameControllers)
-    {
-        if (game_controller != nullptr)
-        {
-            SDL_GameControllerClose(game_controller->handle);
-        }
-    }
+	for (auto count = 0; count < m_pGameControllers.size(); ++count)
+	{
+		if(m_pGameControllers[count] != nullptr)
+		{
+            SDL_GameControllerClose(m_pGameControllers[count]->handle);
+		}
+	}
 
     m_pGameControllers.clear();
 }
 
-bool EventManager::IsKeyDown(const SDL_Scancode key) const
+bool EventManager::isKeyDown(const SDL_Scancode key) const
 {
     if (m_keyStates != nullptr)
     {
-        if (m_keyStates[key] == 1) return true;
+        if (m_keyStates[key] == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+
+    
+
     return false;
 }
 
-bool EventManager::IsKeyUp(const SDL_Scancode key) const
+bool EventManager::isKeyUp(const SDL_Scancode key) const
 {
     if (m_keyStates != nullptr)
     {
-        if (m_keyStates[key] == 0) return true;
+        if (m_keyStates[key] == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+
     return false;
 }
 
-void EventManager::OnKeyDown()
+void EventManager::onKeyDown()
 {
     m_keyStates = SDL_GetKeyboardState(nullptr);
 }
 
-void EventManager::OnKeyUp()
+void EventManager::onKeyUp()
 {
     m_keyStates = SDL_GetKeyboardState(nullptr);
 }
 
-bool EventManager::KeyPressed(const SDL_Scancode c) const
+void EventManager::onMouseMove(SDL_Event& event)
 {
-    return (m_keysCurr[c] > m_keysLast[c]);
+    m_mousePosition.x = event.motion.x;
+    m_mousePosition.y = event.motion.y;
 }
 
-bool EventManager::KeyReleased(const SDL_Scancode c) const
-{
-    return (m_keysCurr[c] < m_keysLast[c]);
-}
-
-void EventManager::OnMouseMove(const SDL_Event& event)
-{
-    m_mousePosition.x = static_cast<float>(event.motion.x);
-    m_mousePosition.y = static_cast<float>(event.motion.y);
-}
-
-void EventManager::OnMouseButtonDown(const SDL_Event& event)
+void EventManager::onMouseButtonDown(SDL_Event& event)
 {
     if (event.button.button == SDL_BUTTON_LEFT)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::LEFT)] = true;
+        m_mouseButtons[LEFT] = true;
     }
 
     if (event.button.button == SDL_BUTTON_MIDDLE)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::MIDDLE)] = true;
+        m_mouseButtons[MIDDLE] = true;
     }
 
     if (event.button.button == SDL_BUTTON_RIGHT)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::RIGHT)] = true;
+        m_mouseButtons[RIGHT] = true;
     }
 }
 
-void EventManager::OnMouseButtonUp(const SDL_Event& event)
+void EventManager::onMouseButtonUp(SDL_Event& event)
 {
     if (event.button.button == SDL_BUTTON_LEFT)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::LEFT)] = false;
+        m_mouseButtons[LEFT] = false;
     }
 
     if (event.button.button == SDL_BUTTON_MIDDLE)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::MIDDLE)] = false;
+        m_mouseButtons[MIDDLE] = false;
     }
 
     if (event.button.button == SDL_BUTTON_RIGHT)
     {
-        m_mouseButtons[static_cast<int>(MouseButtons::RIGHT)] = false;
+        m_mouseButtons[RIGHT] = false;
     }
 }
 
-void EventManager::OnMouseWheel(const SDL_Event& event)
+void EventManager::onMouseWheel(SDL_Event& event)
 {
     m_mouseWheel = event.wheel.y;
 }
 
-bool EventManager::MousePressed(const int b) const
-{
-    return ((m_mouseCurrent & SDL_BUTTON(b)) > (m_mouseLast & SDL_BUTTON(b)));
-}
-
-bool EventManager::MouseReleased(const int b) const
-{
-    return ((m_mouseCurrent & SDL_BUTTON(b)) < (m_mouseLast & SDL_BUTTON(b)));
-}
-
-void EventManager::InitializeControllers()
+void EventManager::m_initializeControllers()
 {
     m_pGameControllers.clear();
-
-    for (auto count = 0; count < SDL_NumJoysticks(); ++count)
-    {
-        auto controller = new GameController(SDL_GameControllerOpen(count));
+	
+	for (auto count = 0; count < SDL_NumJoysticks(); ++count)
+	{
+		auto controller = new GameController(SDL_GameControllerOpen(count));
         m_pGameControllers.push_back(controller);
-    }
+	}
 }
 
-void EventManager::IMGUIKeymap() const
+void EventManager::m_IMGUI_Keymap()
 {
     // Keyboard mapping. ImGui will use those indices to peek into the m_io.KeysDown[] array.
     m_io.KeyMap[ImGuiKey_Tab] = SDL_SCANCODE_TAB;
@@ -315,64 +258,59 @@ void EventManager::IMGUIKeymap() const
     m_io.KeyMap[ImGuiKey_Z] = SDL_SCANCODE_Z;
 }
 
-bool EventManager::GetMouseButton(const int button_number) const
+bool EventManager::getMouseButton(const int button_number) const
 {
     return m_mouseButtons[button_number];
 }
 
-glm::vec2 EventManager::GetMousePosition() const
+void EventManager::serMousePosition(glm::vec2 mousePosition)
 {
+    m_mousePosition = mousePosition;
+}
+
+glm::vec2 EventManager::getMousePosition() const
+{
+
+ 
     return m_mousePosition;
 }
 
-int EventManager::GetMouseWheel() const
+int EventManager::getMouseWheel() const
 {
     return m_mouseWheel;
 }
 
-GameController* EventManager::GetGameController(const int controller_number) const
+GameController* EventManager::getGameController(const int controller_number)
 {
-    if (SDL_GameControllerGetAttached(m_pGameControllers[controller_number]->handle))
+    if(SDL_GameControllerGetAttached(m_pGameControllers[controller_number]->handle))
     {
         return m_pGameControllers[controller_number];
     }
-
+	
     return nullptr;
 }
 
-bool EventManager::IsIMGUIActive() const
+bool EventManager::isIMGUIActive()
 {
     return m_isIMGUIActive;
 }
 
-bool EventManager::IsMainWindowInFocus() const
+EventManager::EventManager():
+    m_isIMGUIActive(false), m_keyStates(nullptr), m_mouseWheel(0), m_isActive(true), m_io(ImGui::GetIO())
 {
-    return m_mainWindowHasFocus;
-}
-
-EventManager::EventManager() :
-    m_io(ImGui::GetIO()), m_isIMGUIActive(false), m_keyStates(nullptr), m_mouseWheel(0), m_isActive(true), m_mainWindowHasFocus(true)
-{
-    // initialize mouse position
+	// initialize mouse position
     m_mousePosition = glm::vec2(0.0f, 0.0f);
-
+	
     // initialize button states for the mouse
-    for (auto& mouse_button_state : m_mouseButtons)
+    for (auto& mouseButtonState : m_mouseButtons)
     {
-        mouse_button_state = false;
+	    mouseButtonState = false;
     }
 
-    m_keysCurr = SDL_GetKeyboardState(&m_numKeys);
-    m_keysLast = new Uint8[m_numKeys];
-    std::memcpy(m_keysLast, m_keysCurr, m_numKeys);
-    SDL_Point mouse_pos = { static_cast<int>(m_mousePosition.x), static_cast<int>(m_mousePosition.y) };
-    m_mouseCurrent = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-    m_mouseLast = m_mouseCurrent;
+    m_initializeControllers();
 
-    InitializeControllers();
-
-    // initialize IMGUI Key Map
-    IMGUIKeymap();
+	// initialize IMGUI Key Map
+    m_IMGUI_Keymap();
 }
 
 EventManager::~EventManager()

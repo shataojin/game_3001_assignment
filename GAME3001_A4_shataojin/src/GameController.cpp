@@ -2,15 +2,15 @@
 
 GameController::GameController(SDL_GameController* controller):
 	handle(controller), DPAD_UP(false), DPAD_DOWN(false), DPAD_LEFT(false), DPAD_RIGHT(false),
-	BUTTON_START(false), BUTTON_BACK(false), BUTTON_SHOULDER_LEFT(false), BUTTON_SHOULDER_RIGHT(false),
-	BUTTON_A(false), BUTTON_B(false), BUTTON_X(false), BUTTON_Y(false),
-	STICK_LEFT_HORIZONTAL(false), STICK_LEFT_VERTICAL(false), STICK_RIGHT_HORIZONTAL(false), STICK_RIGHT_VERTICAL(false)
+	START_BUTTON(false), BACK_BUTTON(false), LEFT_SHOULDER(false), RIGHT_SHOULDER(false),
+	A_BUTTON(false), B_BUTTON(false), X_BUTTON(false), Y_BUTTON(false),
+	LEFT_STICK_X(false), LEFT_STICK_Y(false), RIGHT_STICK_X(false), RIGHT_STICK_Y(false)
 {}
 
 GameController::~GameController()
 = default;
 
-void GameController::Update()
+void GameController::update()
 {
     // DPAD Buttons
     DPAD_UP = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_DPAD_UP);
@@ -19,26 +19,26 @@ void GameController::Update()
     DPAD_RIGHT = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
     // control buttons
-    BUTTON_START = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_START);
-    BUTTON_BACK = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_BACK);
-    BUTTON_GUIDE = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_GUIDE);
+    START_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_START);
+    BACK_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_BACK);
+    GUIDE_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_GUIDE);
 
     // shoulders
-    BUTTON_SHOULDER_LEFT = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
-    BUTTON_SHOULDER_RIGHT = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+    LEFT_SHOULDER = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+    RIGHT_SHOULDER = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
 
     // face buttons
-    BUTTON_A = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_A);
-    BUTTON_B = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_B);
-    BUTTON_X = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_X);
-    BUTTON_Y = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_Y);
+    A_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_A);
+    B_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_B);
+    X_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_X);
+    Y_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_Y);
 
     // sticks
-    STICK_LEFT_HORIZONTAL = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_LEFTX);
-    STICK_LEFT_VERTICAL = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_LEFTY);
-    STICK_LEFT_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+    LEFT_STICK_X = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_LEFTX);
+    LEFT_STICK_Y = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_LEFTY);
+    LEFT_STICK_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_LEFTSTICK);
 
-    STICK_RIGHT_HORIZONTAL = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_RIGHTX);
-    STICK_RIGHT_VERTICAL = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_RIGHTY);
-    STICK_RIGHT_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+    RIGHT_STICK_X = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_RIGHTX);
+    RIGHT_STICK_Y = SDL_GameControllerGetAxis(handle, SDL_CONTROLLER_AXIS_RIGHTY);
+    RIGHT_STICK_BUTTON = SDL_GameControllerGetButton(handle, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
 }

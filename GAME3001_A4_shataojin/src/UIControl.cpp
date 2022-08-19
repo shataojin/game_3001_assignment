@@ -10,9 +10,9 @@ UIControl::UIControl():
 UIControl::~UIControl()
 = default;
 
-bool UIControl::AddEventListener(const Event event, const EventHandler& handler)
+bool UIControl::addEventListener(const Event event, const EventHandler& handler)
 {
-	if (CheckIfEventExists(event))
+	if (m_eventExists(event))
 	{
 		return false;
 	}
@@ -21,15 +21,16 @@ bool UIControl::AddEventListener(const Event event, const EventHandler& handler)
 	return true;
 }
 
-UIControl::EventHandler UIControl::GetEventHandler(const Event event)
+UIControl::EventHandler UIControl::getEventHandler(Event event)
 {
 	return m_events[event];
 }
 
-void UIControl::OnMouseOver()
+void UIControl::onMouseOver()
 {
-	if (const auto mouse_position = EventManager::Instance().GetMousePosition(); 
-		CollisionManager::PointRectCheck( mouse_position, GetTransform()->position, static_cast<float>(GetWidth()), static_cast<float>(GetHeight()) ))
+	const auto mousePosition = EventManager::Instance().getMousePosition();
+	
+	if (CollisionManager::pointRectCheck(mousePosition, getTransform()->position, getWidth(), getHeight()))
 	{
 		m_mouseOver = true;
 	}
@@ -38,41 +39,41 @@ void UIControl::OnMouseOver()
 		m_mouseOver = false;
 	}
 
-	if ((m_events[Event::MOUSE_OVER]) && (!m_mouseOverActive))
+	if ((m_events[MOUSE_OVER]) && (!m_mouseOverActive))
 	{
 		if (m_mouseOver)
 		{
-			m_events[Event::MOUSE_OVER]();
+			m_events[MOUSE_OVER]();
 			m_mouseOverActive = true;
 		}
 	}
-	else if ((m_events[Event::MOUSE_OVER]) && (!m_mouseOver))
+	else if ((m_events[MOUSE_OVER]) && (!m_mouseOver))
 	{
 		m_mouseOverActive = false;
 	}
 }
 
-void UIControl::OnMouseOut()
+void UIControl::onMouseOut()
 {
-	if ((m_events[Event::MOUSE_OUT]) && (m_mouseOutActive) && (!m_mouseOver))
+	if ((m_events[MOUSE_OUT]) && (m_mouseOutActive) && (!m_mouseOver))
 	{
-		m_events[Event::MOUSE_OUT]();
+		m_events[MOUSE_OUT]();
 		m_mouseOutActive = false;
 	}
-	else if ((m_events[Event::MOUSE_OUT]) && (m_mouseOver))
+	else if ((m_events[MOUSE_OUT]) && (m_mouseOver))
 	{
 		m_mouseOutActive = true;
 	}
 }
 
-void UIControl::OnLeftMouseButtonClick()
+void UIControl::onLeftMouseButtonClick()
 {
-	if (EventManager::Instance().GetMouseButton(static_cast<int>(MouseButtons::LEFT)))
+	if (EventManager::Instance().getMouseButton(LEFT))
 	{
-		if ((m_events[Event::CLICK]) && (m_mouseOver) && !m_leftMouseButtonClicked)
+		if ((m_events[CLICK]) && (m_mouseOver) && !m_leftMouseButtonClicked)
 		{
 			m_leftMouseButtonClicked = true;
-			m_events[Event::CLICK](); // call click event
+			m_events[CLICK](); // call click event
 		}
 	}
 	else
@@ -81,7 +82,7 @@ void UIControl::OnLeftMouseButtonClick()
 	}
 }
 
-bool UIControl::CheckIfEventExists(const Event id)
+bool UIControl::m_eventExists(Event id)
 {
 	return m_events.find(id) != m_events.end();
 }

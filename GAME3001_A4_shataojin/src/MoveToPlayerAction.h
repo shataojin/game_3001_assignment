@@ -1,16 +1,18 @@
 #pragma once
-#ifndef __MOVE_TO_PLAYER_ACTION__
-#define __MOVE_TO_PLAYER_ACTION__
-
+#ifndef _MOVE_TO_PLAYER_ACTION_
+#define _MOVE_TO_PLAYER_ACTION_
 #include "ActionNode.h"
 
-class MoveToPlayerAction : public ActionNode
+//Interface(virtual function)
+class MoveToPlayerAction :public ActionNode
 {
 public:
-	MoveToPlayerAction(Agent* agent = nullptr);
+	MoveToPlayerAction();
 	virtual ~MoveToPlayerAction();
 
-	virtual void Action() override; // Define here
+	virtual void Action() override;
+private:
+
 };
 
-#endif /* defined  (__MOVE_TO_PLAYER_ACTION__) */
+#endif

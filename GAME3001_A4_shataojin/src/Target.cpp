@@ -1,147 +1,102 @@
 #include "Target.h"
+
+
+#include "SoundManager.h"
 #include "TextureManager.h"
-#include"EventManager.h"
+#include "Util.h"
 
-Target::Target(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
+
+Target::Target()
 {
-	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/24242424.png",
-		"spritesheet");
+	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
+	const auto size = TextureManager::Instance()->getTextureSize("circle");
+	setWidth(size.x);
+	setHeight(size.y);
+	getTransform()->position = glm::vec2(100.0f, 100.0f);
+	getRigidBody()->velocity = glm::vec2(0, 0);
+	getRigidBody()->isColliding = false;
 
-	// set frame width
-	SetWidth(53);
+	setType(TARGET);
 
-	// set frame height
-	SetHeight(58);
-
-	GetTransform()->position = glm::vec2(400.0f, 300.0f);
-	GetRigidBody()->velocity = glm::vec2(0, 0);
-	GetRigidBody()->isColliding = false;
-
-	SetType(GameObjectType::TARGET);
-	BuildAnimations();
+	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 }
 
 Target::~Target()
 = default;
 
-void Target::Draw()
+void Target::draw()
 {
-	// draw the player according to animation state
-	switch (m_currentAnimationState)
-	{
-	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true);
-		break;
-	case PlayerAnimationState::PLAYER_IDLE_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
-		break;
-	case PlayerAnimationState::PLAYER_RUN_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true);
-		break;
-	case PlayerAnimationState::PLAYER_RUN_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
-		break;
-	default:
-		break;
-	}
+	// alias for x and y
+	const auto x = getTransform()->position.x;
+	const auto y = getTransform()->position.y;
+
+	// draw the target
+	TextureManager::Instance()->draw("circle", x, y, 0, 255, true);
 }
 
-void Target::Update()
+void Target::update()
 {
-	Move();
-	CheckBounds();
-}
-
-void Target::Clean()
-{
-}
-
-void Target::SetAnimationState(const PlayerAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
-}
-
-void Target::BuildAnimations()
-{
-	auto idle_animation = Animation();
-
-	idle_animation.name = "idle";
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-0"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-1"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-2"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-3"));
-
-	SetAnimation(idle_animation);
-
-	auto run_animation = Animation();
-
-	run_animation.name = "run";
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-0"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-1"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-2"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-3"));
-
-	SetAnimation(run_animation);
-}
-
-
-void Target::Move()
-{
-	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
-	{
-		SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
-		GetTransform()->position = GetTransform()->position + glm::vec2(-player_speed, 0.0f);
-	}
-	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
-	{
-		SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
-		GetTransform()->position = GetTransform()->position + glm::vec2(player_speed, 0.0f);
-	}
 	
-	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
-	{
-		
-		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, -player_speed);
+	const float deltaTime = 1.0f / 60.f;
 
-		/*if (m_playerFacingRight)
-		{
-			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
-		}
-		else
-		{
-			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
-		}*/
-	}
-	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
-	{
-		
-		GetTransform()->position = GetTransform()->position + glm::vec2(0.0f, player_speed);
+	// Normalize direction vector
+	float dirmagnitude = Util::magnitude(m_direction);
+	if (dirmagnitude > 0) {
+		getRigidBody()->acceleration = Util::normalize(m_direction) * ACCELERATION;
 
-	/*	if (m_playerFacingRight)
-		{
-			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
-		}
-		else
-		{
-			m_pTarget->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
-		}*/
 	}
+	else if (Util::magnitude(getRigidBody()->velocity) > 0) {
+		getRigidBody()->acceleration = Util::normalize(getRigidBody()->velocity) * -ACCELERATION;
+	}
+
+	getRigidBody()->velocity += getRigidBody()->acceleration;
+
+	// to stop the jittering, resets acceleration and velocity once velocity is low enough
+	if (Util::magnitude(getRigidBody()->velocity) < ACCELERATION) {
+		getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	}
+
+	glm::vec2 pos = getTransform()->position;
+	pos.x += getRigidBody()->velocity.x * deltaTime;
+	pos.y += getRigidBody()->velocity.y * deltaTime;
+
+	getTransform()->position = pos;
 }
 
-void Target::CheckBounds()
+void Target::clean()
 {
-
 }
 
-void Target::Reset()
+void Target::moveLeft() {
+	m_direction.x = -1;
+}
+
+void Target::moveRight() {
+	m_direction.x = 1;
+}
+
+void Target::moveUp() {
+	m_direction.y = -1;
+}
+
+void Target::moveDown() {
+	m_direction.y = 1;
+}
+
+//void Target::stopMovingY() {
+//	m_direction.y = 0;
+//}
+//
+//void Target::stopMovingX() {
+//	m_direction.x = 0;
+//}
+
+void Target::m_checkBounds()
 {
-	GetTransform()->position = m_startPos;
+}
+
+void Target::m_reset()
+{
 }

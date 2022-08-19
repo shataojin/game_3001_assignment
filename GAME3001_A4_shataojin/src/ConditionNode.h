@@ -1,15 +1,17 @@
 #pragma once
-#ifndef __CONDITION_NODE__
-#define __CONDITION_NODE__
+#ifndef _CONDITION_NODE_
+#define _CONDITION_NODE_
 #include "TreeNode.h"
 
-// Abstract Class
-class ConditionNode : public TreeNode
+//Interface(virtual function)
+class ConditionNode :public TreeNode
 {
 public:
-	ConditionNode(Agent* agent = nullptr): TreeNode(agent) { m_isLeaf = false; }
+	ConditionNode() { isLeaf = false; }
 	virtual ~ConditionNode() = default;
-	virtual bool Condition() = 0; // Condition Specialization
+
+	virtual bool Condition() = 0;
 };
 
-#endif /* defined (__CONDITION_NODE__) */
+
+#endif

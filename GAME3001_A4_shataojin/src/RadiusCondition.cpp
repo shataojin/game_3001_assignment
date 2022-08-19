@@ -1,18 +1,18 @@
 #include "RadiusCondition.h"
 
-RadiusCondition::RadiusCondition(Agent* agent, const bool within_radius)
-	:ConditionNode(agent)
+RadiusCondition::RadiusCondition(const bool within_radius)
 {
-	m_name = "Radius Condition";
-	SetIsWithinRadius(within_radius);
+	setIsWithinRadius(within_radius);
+	name = "Radius Condition";
 }
 
 RadiusCondition::~RadiusCondition()
 = default;
 
-void RadiusCondition::SetIsWithinRadius(const bool state)
+void RadiusCondition::setIsWithinRadius(const bool state)
 {
 	m_isWithinRadius = state;
+	data = state;
 }
 
 bool RadiusCondition::Condition()

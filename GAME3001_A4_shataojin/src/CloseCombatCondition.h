@@ -1,21 +1,20 @@
 #pragma once
-#ifndef __CLOSE_COMBAT_CONDITION__
-#define __CLOSE_COMBAT_CONDITION__
-
+#ifndef _CLOSE_COMBAT_CONDITION_
+#define _CLOSE_COMBAT_CONDITION_
 #include "ConditionNode.h"
 
-class CloseCombatCondition : public ConditionNode
+class CloseCombatCondition :public ConditionNode
 {
 public:
-	CloseCombatCondition(Agent* agent = nullptr, bool within_combat_range = false);
+	CloseCombatCondition(bool within_Combat_Range = false);
 	virtual ~CloseCombatCondition();
 
-	// Getters and Setters
-	void SetIsWithinCombatRange(bool state);
+	//Getters Setters
+	void setWithinCombatRange(bool state);
 
 	virtual bool Condition() override;
 private:
-	bool m_isWithinCombatRange{};
+	bool m_isWithinCombatRange;
 };
 
-#endif /* defined (__CLOSE_COMBAT_CONDITION__) */
+#endif

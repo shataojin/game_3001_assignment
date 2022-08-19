@@ -11,19 +11,19 @@ class Button : public UIControl
 public:
 	explicit Button(const std::string& image_path = "../Assets/textures/StartButton.png", 
 	                std::string button_name = "startButton", 
-	                GameObjectType type = GameObjectType::START_BUTTON, 
+	                GameObjectType type = START_BUTTON, 
 	                glm::vec2 position = glm::vec2(0.0f, 0.0f), bool is_centered = true);
 	
-	~Button() override;
+	~Button();
 
 	// Life Cycle Events
-	void Draw() override;
-	void Update() override;
-	void Clean() override;
+	void draw() override;
+	void update() override;
+	void clean() override;
 
 	// button setters
-	void SetAlpha(Uint8 alpha);
-	void SetActive(bool value);
+	void setAlpha(Uint8 alpha);
+	void setActive(bool value);
 	
 private:
 	Uint8 m_alpha;

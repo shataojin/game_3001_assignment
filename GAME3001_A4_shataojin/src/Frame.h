@@ -5,11 +5,11 @@
 
 struct Frame
 {
-	std::string name = "";
-	int x = 0;
-	int y = 0;
-	int w = 0;
-	int h = 0;
+	std::string name;
+	int x;
+	int y;
+	int w;
+	int h;
 };
 
 #endif /* defined (__FRAME__) */

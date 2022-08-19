@@ -14,27 +14,30 @@
 #include <string>
 #include "Config.h"
 
-class FontManager
+class FontManager 
 {
 public:
-	static FontManager& Instance()
+	static FontManager* Instance()
 	{
-		static FontManager instance; // Magic statics
-		return instance;
+		if (s_pInstance == nullptr)
+		{
+			s_pInstance = new FontManager();
+		}
+		return s_pInstance;
 	}
 
-	bool Load(const std::string& file_name, const std::string& id, int size, int style = TTF_STYLE_NORMAL);
-	bool TextToTexture(const std::string& text, const std::string& font_id, const std::string& texture_id, SDL_Color colour = { 0, 0, 0, 255 });
-	TTF_Font* GetFont(const std::string& id);
-	void Clean();
+	bool load(const std::string& file_name, const std::string& id, int size, int style = TTF_STYLE_NORMAL);
+	bool textToTexture(const std::string& text, const std::string& font_id, const std::string& texture_id, SDL_Color colour = { 0, 0, 0, 255 });
+	TTF_Font* getFont(const std::string& id);
+	void clean();
 
-	void DisplayFontMap();
+	void displayFontMap();
 
 private:
 	FontManager();
 	~FontManager();
 
-	bool CheckIfFontExists(const std::string& id);
+	bool m_exists(const std::string& id);
 
 	std::unordered_map<std::string, std::shared_ptr<TTF_Font>> m_fontMap;
 

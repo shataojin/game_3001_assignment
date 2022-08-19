@@ -9,35 +9,35 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	RemoveAllChildren();
+	removeAllChildren();
 }
 
 
-void Scene::AddChild(DisplayObject * child, uint32_t layer_index, std::optional<uint32_t> order_index)
+void Scene::addChild(DisplayObject * child, uint32_t layer_index, std::optional<uint32_t> order_index)
 {
 	uint32_t index = 0;
 	// If we passed in an order index, override the auto-increment value
-	if (order_index.has_value())
-	{
+	if(order_index.has_value()) 
+    {
 		index = order_index.value();
 	}
 	// If we did not pass in an order index, generate one for them
-	else
-	{
+	else 
+    {
 		index = m_nextLayerIndex++;
 	}
-	child->SetLayerIndex(layer_index, index);
+	child->setLayerIndex(layer_index, index);
 	child->m_pParentScene = this;
 	m_displayList.push_back(child);
 }
 
-void Scene::RemoveChild(DisplayObject * child)
+void Scene::removeChild(DisplayObject* child)
 {
 	delete child;
 	m_displayList.erase(std::remove(m_displayList.begin(), m_displayList.end(), child), m_displayList.end());
 }
 
-void Scene::RemoveAllChildren()
+void Scene::removeAllChildren()
 {
 	for (auto& count : m_displayList)
 	{
@@ -49,12 +49,12 @@ void Scene::RemoveAllChildren()
 }
 
 
-int Scene::NumberOfChildren() const
+int Scene::numberOfChildren() const
 {
 	return m_displayList.size();
 }
 
-bool Scene::SortObjects(DisplayObject * left, DisplayObject * right)
+bool Scene::sortObjects(DisplayObject* left, DisplayObject* right)
 {
 	/*
 	 * First check if they have the same enabled status, if they have the same enabled status,
@@ -65,45 +65,38 @@ bool Scene::SortObjects(DisplayObject * left, DisplayObject * right)
 	 * This will effectively sort by layer indices, and move disabled elements to the end of the list
 	 */
 	return
-		(left->IsEnabled() == right->IsEnabled()) ?
-		(left->m_layerIndex == right->m_layerIndex ?
-			left->m_layerOrderIndex < right->m_layerOrderIndex :
-			left->m_layerIndex < right->m_layerIndex) :
-		left->IsEnabled();
+		(left->isEnabled() == right->isEnabled()) ? 
+			(left->m_layerIndex== right->m_layerIndex ?
+				left->m_layerOrderIndex < right->m_layerOrderIndex :
+				left->m_layerIndex < right->m_layerIndex) :
+			left->isEnabled();                           
 }
 
-void Scene::UpdateDisplayList()
+void Scene::updateDisplayList()
 {
-	std::sort(m_displayList.begin(), m_displayList.end(), SortObjects);
-	for (auto& display_object : m_displayList)
+	std::sort(m_displayList.begin(), m_displayList.end(), sortObjects);
+	for (auto& count : m_displayList)
 	{
-		if (display_object != nullptr)
+		if (count != nullptr)
 		{
-			if (!display_object->IsEnabled())
+			if (!count->isEnabled())
 				break;
-			display_object->Update();
+			count->update();
 		}
-	}
+	}	
 }
 
-void Scene::DrawDisplayList()
+void Scene::drawDisplayList()
 {
-	std::sort(m_displayList.begin(), m_displayList.end(), SortObjects);
-	for (auto& display_object : m_displayList)
+	std::sort(m_displayList.begin(), m_displayList.end(), sortObjects);
+	for (auto& count : m_displayList)
 	{
-		if (display_object != nullptr)
+		if (count != nullptr)
 		{
-			if (display_object->IsEnabled() && display_object->IsVisible())
-			{
-				display_object->Draw();
-			}
-
+			if (!count->isEnabled())
+				break;
+			count->draw();
 		}
 	}
 
-}
-
-std::vector<DisplayObject*> Scene::GetDisplayList() const
-{
-	return m_displayList;
 }

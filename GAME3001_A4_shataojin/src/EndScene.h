@@ -10,19 +10,19 @@ class EndScene final : public Scene
 {
 public:
 	EndScene();
-	~EndScene() override;
+	~EndScene();
 
 	// Inherited via Scene
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
-	virtual void HandleEvents() override;
-	virtual void Start() override;
+	virtual void draw() override;
+	virtual void update() override;
+	virtual void clean() override;
+	virtual void handleEvents() override;
+	virtual void start() override;
 
 private:
 	Label* m_label{};
 
-	Button* m_pRestartButton{};
+	Button* m_pRestartButton;
 };
 
 #endif /* defined (__END_SCENE__) */

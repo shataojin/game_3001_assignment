@@ -1,15 +1,21 @@
 #include "LOSCondition.h"
 
-LOSCondition::LOSCondition(Agent* agent)
-	:ConditionNode(agent)
+LOSCondition::LOSCondition(const bool LOS)
 {
-	m_name = "LOS Condition";
+	setLOS(LOS);
+	name = "LOS Condition";
 }
 
 LOSCondition::~LOSCondition()
 = default;
 
+void LOSCondition::setLOS(const bool state)
+{
+	m_hasLOS = state;
+	data = state;
+}
+
 bool LOSCondition::Condition()
 {
-	return GetAgent()->HasLOS();
+	return m_hasLOS;
 }

@@ -6,29 +6,28 @@
 #include "Animation.h"
 #include <unordered_map>
 #include "SpriteSheet.h"
-#include"NavigationObject.h"
 
-class Sprite : public NavigationObject
+class Sprite : public DisplayObject
 {
 public:
 	Sprite();
 	virtual ~Sprite();
 	
 	// Life Cycle Functions
-	virtual void Draw() = 0;
-	virtual void Update() = 0;
-	virtual void Clean() = 0;
+	virtual void draw() = 0;
+	virtual void update() = 0;
+	virtual void clean() = 0;
 
 	// getters
-	SpriteSheet* GetSpriteSheet();
-	Animation& GetAnimation(const std::string& name);
+	SpriteSheet* getSpriteSheet();
+	Animation& getAnimation(const std::string& name);
 	
 	// setters
-	void SetSpriteSheet(SpriteSheet* sprite_sheet);
-	void SetAnimation(const Animation& animation);
+	void setSpriteSheet(SpriteSheet* sprite_sheet);
+	void setAnimation(const Animation& animation);
 private:
 	// private utility functions
-	bool CheckIfAnimationExists(const std::string& id);
+	bool m_animationExists(const std::string& id);
 
 	SpriteSheet* m_pSpriteSheet;
 

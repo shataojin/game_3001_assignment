@@ -6,7 +6,7 @@
 
 PlayerAgent::PlayerAgent()
 {
-	TextureManager::Instance()->load("../Assets/textures/Best.png", "bst");
+	TextureManager::Instance()->load("../Assets/textures/xss.png", "bst");
 
 	auto size = TextureManager::Instance()->getTextureSize("bst");
 

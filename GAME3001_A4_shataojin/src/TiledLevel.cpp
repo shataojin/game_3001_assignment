@@ -1,191 +1,119 @@
-#include "TiledLevel.h"
+﻿#include "TiledLevel.h"
 #include "TextureManager.h"
-#include "PathManager.h"
-#include "PathNode.h"
-#include <fstream>
 
-TiledLevel::TiledLevel(const std::string& levelMap, const std::string& tileData, 
-                       const std::string& texturePath, const std::string& textureKey,
-                       const SDL_Point tileSrcSize, const SDL_FPoint tileDstSize, const unsigned short rows, const unsigned short cols, 
-                       const bool hasNavigation, const bool isRendered): m_hasNavigation(hasNavigation),
-                                                                         m_renderTiles(isRendered), m_textureKey(textureKey), m_rows(rows), m_cols(cols)
+
+TileC::TileC(std::string texture, std::string key)
 {
-	TextureManager::Instance().Load(texturePath, textureKey);
-	// Create map of prototypes.
-	std::ifstream inFile(tileData);
-	if (inFile.is_open())
-	{
-		char key;
-		int type;
-		int x, y;
-		while (!inFile.eof())
-		{
-			inFile >> key >> x >> y >> type;
-			m_tiles.emplace(key, new Tile({ 0.0f,0.0f, tileDstSize.x, tileDstSize.y }, 
-				static_cast<TileType>(type)));
-			m_tiles[key]->SetDrawData({ x * tileSrcSize.x, y * tileSrcSize.y,
-				tileSrcSize.x, tileSrcSize.y }, textureKey);
-		}
-	}
-	inFile.close();
-	// Create level of Tiles.
-	inFile.open(levelMap);
-	if (inFile.is_open())
-	{
-		char key;
-		m_level.reserve(m_rows * m_cols);
-		for (unsigned short row = 0; row < rows; row++)
-		{
-			for (unsigned short col = 0; col < cols; col++)
-			{
-				inFile >> key;
-				Tile* tile = m_tiles[key]->Clone(); // Clone only copies m_dst and m_type.
-				tile->SetPos(col, row, tileDstSize.x, tileDstSize.y);
-				// Some flag-based setting of optional data.
-				if (m_renderTiles)
-				{
-					tile->SetDrawData(m_tiles[key]->GetSrc(), m_tiles[key]->GetTextureKey());
-				}
-				if (m_hasNavigation)
-				{
-					tile->SetGridPosition(col, row);
-					tile->AddLabels();
-					if (tile->GetTileType() != TileType::IMPASSABLE)
-					{
-						tile->AddNode(); // Only add node to non-impassable tiles.
-						tile->SetTileStatus(TileStatus::UNVISITED);
-					}
-				}
-				m_level.push_back(tile);
-				// Push into additional vectors for quick testing.
-				if (tile->GetTileType() == TileType::IMPASSABLE)
-					m_impassables.push_back(tile);
-				if (tile->GetTileType() == TileType::HAZARD)
-					m_hazards.push_back(tile);
-				// TODO: Destructibles.
-			}
-		}
-	}
-	inFile.close();
-	if (m_hasNavigation) LinkTiles();
+	TextureManager::Instance()->load(texture,key);
+	m_Texture = texture;
+	m_key = key;
+
+	auto size = TextureManager::Instance()->getTextureSize(key);
+	setWidth(size.x);
+	setHeight(size.y);
+	setType(STAGE);
+}
+
+void TileC::draw()
+{
+	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+	TextureManager::Instance()->draw(m_key, getTransform()->position.x, getTransform()->position.y, 0, 255, true);
+}
+
+//void TileC::setString(std::string texture)
+//{
+//	m_Texture = texture;
+//}
+
+//
+TiledLevel::TiledLevel(const unsigned short column, const unsigned short row, 
+                       const char* tileData, const char* levelData, const char* tileKey) :m_row(row), m_col(column), m_tileKey(tileKey)
+{
+	auto size = Config::TILE_SIZE;
+	//std::ifstream inFile(tileData);
+	//if(inFile.is_open())
+	//{
+	//	char key;
+	//	int x, y;
+	//	bool obs, haz;
+	//	while (!inFile.eof())
+	//	{
+	//		inFile >> key >> x >> y >> obs >> haz;
+	//		m_tiles.emplace(key, new TileC({ x * size,y * size, },{0.0f, 0.0f}, obs, haz));
+	//	}
+	//}
+	//inFile.close();
+	//inFile.open(levelData);
+	//if (inFile.is_open())
+	//{
+	//	char key;
+	//	m_level.resize(m_row); // Important or we cannot use subscripts.
+	//	for (unsigned short row = 0; row < m_row; row++)
+	//	{
+	//		m_level[row].resize(m_col);
+	//		for (unsigned short col = 0; col < m_col; col++)
+	//		{
+	//			inFile >> key;
+	//			m_level[row][col] = m_tiles[key]->Clone(); // Common prototype method.
+	//			m_level[row][col]->SetXY((float)(col * size), (float)(row * size));
+	//			if (m_level[row][col]->IsObstacle())
+	//				m_obstacles.push_back(m_level[row][col]);
+	//		}
+	//	}
+	//}
+	//inFile.close();
 }
 
 TiledLevel::~TiledLevel()
 {
-	for (const auto tile : m_level)
+	//// Clear the tile clones. This also clears the ones in m_obstacles.
+	//for (unsigned short row = 0; row < m_row; row++)
+	//{
+	//	for (unsigned short col = 0; col < m_col; col++)
+	//	{
+	//		delete m_level[row][col];
+	//		m_level[row][col] = nullptr;
+	//	}
+	//}
+	//m_level.clear();
+	m_obstacles.clear();
+	// Clear the original tiles.
+	for (std::map<char, TileC*>::iterator i = m_tiles.begin(); i != m_tiles.end(); i++)
 	{
-		delete tile;
-	}
-	m_level.clear();
-	for (const auto& prototile : m_tiles)
-	{
-		delete prototile.second;
+		delete i->second;
+		i->second = nullptr;
 	}
 	m_tiles.clear();
 }
 
-void TiledLevel::Draw()
+void TiledLevel::draw()
 {
-	if (m_renderTiles)
+	for (unsigned short row = 0; row < m_row; row++)
 	{
-		for (const auto tile : m_level)
+		for (unsigned short col = 0; col < m_col; col++)
 		{
-			tile->Draw();
-		}
-	}
-	if (m_hasNavigation && m_level[0]->GetLabelsEnabled())
-	{
-		for (const auto tile : m_level)
-		{
-			tile->DrawNavigation();
-		}
-		PathManager::DrawPath();
-	}
-}
-
-void TiledLevel::Update()
-{
-
-}
-
-void TiledLevel::Clean()
-{
-	// Empty for now. Uses destructor.
-}
-
-void TiledLevel::SetLabelsEnabled(bool state)
-{
-	if (!m_hasNavigation) return;
-	for (const auto tile : m_level)
-	{
-		tile->SetLabelsEnabled(state);
-	}
-}
-
-
-void TiledLevel::LinkTiles()
-{
-	for (int row = 0; row < m_rows; ++row)
-	{
-		for (int col = 0; col < m_cols; ++col)
-		{
-			Tile* tile = GetTile(col, row);
-			if (tile->GetNode() == nullptr) continue; // Don't add neighbours to a null node.
-
-			// Add connection to Tile above.
-			if (row != 0 && GetTile(col, row - 1)->GetNode() != nullptr)
-			{
-				tile->GetNode()->AddConnection(
-					new PathConnection(tile->GetNode(), GetTile(col, row - 1)->GetNode()) );
-			}
-			// Add connection to Tile below.
-			if (row != m_rows - 1 && GetTile(col, row + 1)->GetNode() != nullptr)
-			{
-				tile->GetNode()->AddConnection(
-					new PathConnection(tile->GetNode(), GetTile(col, row + 1)->GetNode()));
-			}
-			// Add connection to Tile to left.
-			if (col != 0 && GetTile(col - 1, row)->GetNode() != nullptr)
-			{
-				tile->GetNode()->AddConnection(
-					new PathConnection(tile->GetNode(), GetTile(col - 1, row)->GetNode()));
-			}
-			// Add connection to Tile to right.
-			if (col != m_cols - 1 && GetTile(col + 1, row)->GetNode() != nullptr)
-			{
-				tile->GetNode()->AddConnection(
-					new PathConnection(tile->GetNode(), GetTile(col + 1, row)->GetNode()));
-			}
+			TextureManager::Instance()->draw(m_tileKey,
+				getTransform()->position.x, getTransform()->position.y, 0, 255, true);
+			//SDL_RenderCopyF(Engine::Instance().GetRenderer(), TEMA::GetTexture(m_tileKey),
+			//	m_level[row][col]->getTransform()->position, m_level[row][col]->getTransform()->scale);
 		}
 	}
 }
 
-Tile* TiledLevel::GetTile(unsigned col, unsigned row) const
+DestructibleObstacle::~DestructibleObstacle()
+= default;
+
+void DestructibleObstacle::setCurrentHp(int n)
 {
-	return m_level[row * m_cols + col];
+	currentHp = n;
 }
 
-Tile* TiledLevel::GetTile(glm::vec2 pos) const
+int DestructibleObstacle::getCurrentHp() const
 {
-	return m_level[static_cast<int>(pos.y) * m_cols + static_cast<int>(pos.x)];
+	return currentHp;
 }
 
-std::vector<Tile*>& TiledLevel::GetLevel()
+void DestructibleObstacle::Destroy()
 {
-	return m_level;
-}
-
-std::vector<Tile*>& TiledLevel::GetImpassables()
-{
-	return m_impassables;
-}
-
-std::vector<Tile*>& TiledLevel::GetHazards()
-{
-	return m_hazards;
-}
-
-bool TiledLevel::HasNavigation() const
-{
-	return m_hasNavigation;
+	setEnabled(false);
 }

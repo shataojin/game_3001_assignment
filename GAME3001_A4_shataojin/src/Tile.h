@@ -1,64 +1,51 @@
-#pragma once
-#ifndef __TILE__
-#define __TILE__
+﻿#pragma once
+#ifndef  _TILE_
+#define  _TILE_
 
-#include <string>
 #include "Label.h"
-#include "NavigationObject.h"
-#include "TileType.h"
+#include "NavigationAgent.h"
+#include "NeighbourTile.h"
 #include "TileStatus.h"
 
-class PathNode; // Forward declaration instead of an #include directive.
-
-class Tile : public NavigationObject
+class Tile : public NavigationAgent
 {
 public:
-	Tile(SDL_FRect dst = { 0,0,0,0 }, TileType type = TileType::PASSABLE);
-	~Tile() override;
+	//Constructor
+	Tile();
 
-	// DisplayObject Life-Cycle Functions
-	void Draw() override;
-	void DrawNavigation(); // Not from GameObject.
-	void Update() override;
-	void Clean() override;
+	//Destructor
+	~Tile();
+	//Life-Cycle Functions
+	void draw() override;
+	void update() override;
+	void clean() override;
 
-	// Getters and Setters
-	[[nodiscard]] TileType GetTileType() const;
-	void SetTileType(TileType type);
-	[[nodiscard]] TileStatus GetTileStatus() const;
-	void SetTileStatus(TileStatus status);
-	
-	[[nodiscard]] unsigned short GetTileHealth() const;
-	void SetTileHealth(int health);
-	[[nodiscard]] float GetTileCost() const;
-	void SetTileCost(float cost);
-	void SetDrawData(SDL_Rect src, const std::string& textureKey);
-	[[nodiscard]] SDL_Rect GetSrc() const;
-	[[nodiscard]] const std::string& GetTextureKey() const;
-	[[nodiscard]] PathNode* GetNode() const;
+	Tile* getNeighbourTile(NeighbourTile position);
+	void setNeighbourTile(NeighbourTile position, Tile* tile);
 
-	// Others
-	void AddNode(); // Really a setter.
-	void AddLabels();
-	[[nodiscard]] bool GetLabelsEnabled() const;
-	void SetLabelsEnabled(bool state);
-	[[nodiscard]] Tile* Clone() const;
-	void SetPos(float col, float row, float sizeX, float sizeY);
+	float getTileCost() const;
+	void setTileCost(float cost);
+
+	float getTileStatus()const;
+	void setTileStatus(float status);
+
+	void addLabels();
+	void setLabelsEnabled(bool state);
+
+	bool isObstacle = false;
+
+	//glm::vec2 getGridPosition() const;
+	//void setGridPosition(float col, float row);
+	glm::vec4 m_tileColor;
 private:
-	std::string m_textureKey;
-	SDL_Rect m_src;
-	SDL_FRect m_dst;
-
-	TileType m_type;
-	TileStatus m_status;
-	unsigned short m_health; // TODO: Add destructible functionality.
 	float m_cost;
-
+	float m_status;
 	Label* m_costLabel;
 	Label* m_statusLabel;
-	bool m_labelsEnabled;
+	//glm::vec4 m_tileColor;
 
-	PathNode* m_node; // Node that could be part of the navigation graph.
+	Tile* m_neighbours[NUM_OF_NEIGHBOUR_TILES];
+
+	//glm::vec2 m_gridPosition;
 };
-
-#endif /* defined (__TILE__) */
+#endif

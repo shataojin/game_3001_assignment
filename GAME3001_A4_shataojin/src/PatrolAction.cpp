@@ -1,11 +1,9 @@
 #include "PatrolAction.h"
-
 #include <iostream>
 
-PatrolAction::PatrolAction(Agent* agent)
-	:ActionNode(agent)
+PatrolAction::PatrolAction()
 {
-	m_name = "Patrol Action";
+	name = "Patrol Action";
 }
 
 PatrolAction::~PatrolAction()
@@ -13,10 +11,5 @@ PatrolAction::~PatrolAction()
 
 void PatrolAction::Action()
 {
-	if(GetAgent()->GetActionState() != ActionState::PATROL)
-	{
-		std::cout << "Performing " << m_name << std::endl;
-		GetAgent()->SetActionState(ActionState::PATROL);
-	}
-	GetAgent()->Patrol();
+	std::cout << "Performing Patrol Action" << std::endl;
 }

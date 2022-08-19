@@ -1,91 +1,117 @@
 #include "Player.h"
 #include "TextureManager.h"
 
-Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
+Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 {
-	TextureManager::Instance().LoadSpriteSheet(
+	TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
 		"../Assets/sprites/atlas.png", 
 		"spritesheet");
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
+	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
 	
 	// set frame width
-	SetWidth(53);
+	setWidth(53);
 
 	// set frame height
-	SetHeight(58);
+	setHeight(58);
 
-	GetTransform()->position = glm::vec2(400.0f, 300.0f);
-	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->isColliding = false;
-	SetType(GameObjectType::PLAYER);
+	getTransform()->position = glm::vec2(400.0f, 300.0f);
+	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->isColliding = false;
+	setType(PLAYER);
 
-	BuildAnimations();
+	m_buildAnimations();
 }
 
 Player::~Player()
 = default;
 
-void Player::Draw()
+void Player::draw()
 {
+	// alias for x and y
+	const auto x = getTransform()->position.x;
+	const auto y = getTransform()->position.y;
+
 	// draw the player according to animation state
 	switch(m_currentAnimationState)
 	{
-	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true);
+	case PLAYER_IDLE_RIGHT:
+		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
+			x, y, 0.12f, 0, 255, true);
 		break;
-	case PlayerAnimationState::PLAYER_IDLE_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+	case PLAYER_IDLE_LEFT:
+		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
+			x, y, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
-	case PlayerAnimationState::PLAYER_RUN_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true);
+	case PLAYER_RUN_RIGHT:
+		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
+			x, y, 0.25f, 0, 255, true);
 		break;
-	case PlayerAnimationState::PLAYER_RUN_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+	case PLAYER_RUN_LEFT:
+		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
+			x, y, 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	default:
+		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
+			x, y, 0.12f, 0, 255, true);
 		break;
+	}
+	
+}
+
+void Player::update()
+{
+	if(m_currentAnimationState == PLAYER_RUN_RIGHT)
+	{
+		getTransform()->position += glm::vec2(5.0f, 0.0f);
+	}
+
+	if (m_currentAnimationState == PLAYER_RUN_LEFT)
+	{
+		getTransform()->position += glm::vec2(-5.0f, 0.0f);
+	}
+
+	if (m_currentAnimationState == PLAYER_RUN_UP)
+	{
+		getTransform()->position += glm::vec2(0.0f, 5.0f);
+	}
+
+	if (m_currentAnimationState == PLAYER_RUN_DOWN)
+	{
+		getTransform()->position += glm::vec2(0.0f, -5.0f);
 	}
 }
 
-void Player::Update()
+void Player::clean()
 {
 }
 
-void Player::Clean()
-{
-}
-
-void Player::SetAnimationState(const PlayerAnimationState new_state)
+void Player::setAnimationState(const PlayerAnimationState new_state)
 {
 	m_currentAnimationState = new_state;
 }
 
-void Player::BuildAnimations()
+void Player::m_buildAnimations()
 {
-	auto idle_animation = Animation();
+	Animation idleAnimation = Animation();
 
-	idle_animation.name = "idle";
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-0"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-1"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-2"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-3"));
+	idleAnimation.name = "idle";
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-0"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-1"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-2"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-3"));
 
-	SetAnimation(idle_animation);
+	setAnimation(idleAnimation);
 
-	auto run_animation = Animation();
+	Animation runAnimation = Animation();
 
-	run_animation.name = "run";
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-0"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-1"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-2"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-3"));
+	runAnimation.name = "run";
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-0"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-1"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-2"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-3"));
 
-	SetAnimation(run_animation);
+	setAnimation(runAnimation);
 }

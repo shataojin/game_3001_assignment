@@ -1,16 +1,17 @@
 #pragma once
-#ifndef __ACTION_NODE__
-#define __ACTION_NODE__
+#ifndef _ACTION_NODE_
+#define _ACTION_NODE_
 #include "TreeNode.h"
-#include "Agent.h"
 
-// Abstract Class
-class ActionNode : public TreeNode
+//Interface(virtual function)
+class ActionNode :public TreeNode
 {
 public:
-	ActionNode(Agent* agent = nullptr): TreeNode(agent) { m_isLeaf = true; }
+	ActionNode() { isLeaf = true; }
 	virtual ~ActionNode() = default;
-	virtual void Action() = 0; // abstract method (function) -> Specialization
+
+	virtual void Action() = 0;
 };
 
-#endif /* defined (__ACTION_NODE__) */
+#endif
+

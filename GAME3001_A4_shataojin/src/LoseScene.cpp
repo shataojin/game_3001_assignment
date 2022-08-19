@@ -7,8 +7,9 @@
 LoseScene::LoseScene()
 {
 	LoseScene::start();
-	SoundManager::Instance().load("../Assets/audio/LBgm.mp3", "LBgm", SOUND_MUSIC);
-	SoundManager::Instance().playMusic("LBgm", -1, 0);
+	SoundManager::Instance().load("../Assets/audio/Bgm_2.mp3", "Bgm", SOUND_MUSIC);
+	SoundManager::Instance().playMusic("Bgm", -1, 0);
+
 }
 
 LoseScene::~LoseScene()
@@ -49,19 +50,8 @@ void LoseScene::handleEvents()
 
 void LoseScene::start()
 {
-	TextureManager::Instance()->load("../Assets/textures/backgroundLose.png", "backgroundLose");
+	TextureManager::Instance()->load("../Assets/textures/x.jpg", "backgroundLose");
 
-	/*const SDL_Color blue = { 0, 0, 255, 255 };
-	m_pStartLabel = new Label("LOSE SCENE", "Consolas", 80, blue, glm::vec2(400.0f, 40.0f));
-	m_pStartLabel->setParent(this);
-	addChild(m_pStartLabel);*/
-
-	/*m_pInstructionsLabel = new Label("Press 1 to Play", "Consolas", 40, blue, glm::vec2(400.0f, 120.0f));
-	m_pInstructionsLabel->setParent(this);
-	addChild(m_pInstructionsLabel);*/
-
-	//TODO Change button sprite to "Restart", Same use
-	// Start Button
 	m_pStartButton = new Button("../Assets/textures/restartButton.png", "restart");
 	m_pStartButton->getTransform()->position = glm::vec2(200.0f, 300.0f);
 
@@ -82,11 +72,6 @@ void LoseScene::start()
 		});
 	addChild(m_pStartButton);
 
-	//TODO Change button sprite to "Main menu"
-	// Exit Button
-	m_pExitButton = new Button("../Assets/textures/menuButton.png", "menu");
-	m_pExitButton->getTransform()->position = glm::vec2(500.0f, 300.0f);
-
 	m_pExitButton->addEventListener(CLICK, [&]()-> void
 		{
 			m_pExitButton->setActive(false);
@@ -103,4 +88,6 @@ void LoseScene::start()
 			m_pExitButton->setAlpha(255);
 		});
 	addChild(m_pExitButton);
+
+
 }

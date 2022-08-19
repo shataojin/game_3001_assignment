@@ -1,7 +1,5 @@
 #include "Button.h"
 #include <utility>
-
-#include "EventManager.h"
 #include "TextureManager.h"
 
 
@@ -18,41 +16,41 @@ Button::Button(const std::string& image_path, std::string button_name, const Gam
                const glm::vec2 position, const bool is_centered):
 m_alpha(255), m_name(std::move(button_name)), m_isCentered(is_centered), m_active(true)
 {
-	TextureManager::Instance().Load(image_path,m_name);
+	TextureManager::Instance()->load(image_path,m_name);
 
-	const auto size = TextureManager::Instance().GetTextureSize(m_name);
-	SetWidth(static_cast<int>(size.x));
-	SetHeight(static_cast<int>(size.y));
-	GetTransform()->position = position;
-	SetType(type);
+	const auto size = TextureManager::Instance()->getTextureSize(m_name);
+	setWidth(size.x);
+	setHeight(size.y);
+	getTransform()->position = position;
+	setType(type);
 }
 
 Button::~Button()
 = default;
 
-void Button::Draw()
+void Button::draw()
 {
+	// alias for x and y
+	const auto x = getTransform()->position.x;
+	const auto y = getTransform()->position.y;
+
 	// draw the button
-	TextureManager::Instance().Draw(m_name, GetTransform()->position, 0, m_alpha, m_isCentered);
+	TextureManager::Instance()->draw(m_name, x, y, 0, m_alpha, m_isCentered);
 }
 
-void Button::Update()
+void Button::update()
 {
-	if(EventManager::Instance().IsMainWindowInFocus())
-	{
-		//check if mouse is over the Button
-		OnMouseOver();
+	//check if mouse is over the Button
+	onMouseOver();
 
-		// check if mouse outside the Button
-		OnMouseOut();
+	// check if mouse outside the Button
+	onMouseOut();
 
-		// check if left mouse is clicked
-		OnLeftMouseButtonClick();
-	}
-	
+	// check if left mouse is clicked
+	onLeftMouseButtonClick();
 }
 
-void Button::Clean()
+void Button::clean()
 {
 }
 
@@ -61,7 +59,7 @@ void Button::Clean()
  * @param alpha
  * @return void
  */
-void Button::SetAlpha(const Uint8 alpha)
+void Button::setAlpha(const Uint8 alpha)
 {
 	m_alpha = alpha;
 }
@@ -70,7 +68,7 @@ void Button::SetAlpha(const Uint8 alpha)
  * @brief sets the button active boolean
  * @return void
  */
-void Button::SetActive(const bool value)
+void Button::setActive(const bool value)
 {
 	m_active = value;
 }

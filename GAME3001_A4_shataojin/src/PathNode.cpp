@@ -1,31 +1,39 @@
 #include "PathNode.h"
+#include "TextureManager.h"
 #include "Util.h"
+#include "Config.h"
 
 PathNode::PathNode()
 {
-	SetWidth(10);
-	SetHeight(10);
-	GetTransform()->position = glm::vec2(0, 0);
-	GetRigidBody()->isColliding = false;
-	SetType(GameObjectType::PATH_NODE);
-	SetCurrentHeading(0.0f);
-	SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // faces right
-	SetLOSDistance(1000.0f);
-	SetLOSColour(glm::vec4(0, 0.5, 1, 1)); // light blue colour
+	setWidth(10);
+	setHeight(10);
+	getTransform()->position = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->isColliding = false;
+	setType(PATH_NODE);
+
+	setRotation(0.0f);// current facing angle
+	setOrientation(glm::vec2(1.0f, 0.0f)); // facing right
+
+	setLOSDistance(1000.0f);
+	setLOSColor(glm::vec4(1, 0, 0, 1));
 }
 
 PathNode::~PathNode()
 = default;
 
-void PathNode::Draw()
+void PathNode::draw()
 {
-	Util::DrawRect(GetTransform()->position - glm::vec2(5, 5), 10, 10, GetLOSColour());
+	// draw debug tile for positioning
+	//Util::DrawRect(getTransform()->position - glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f), Config::TILE_SIZE, Config::TILE_SIZE);
+
+	// draw node
+	Util::DrawRect(getTransform()->position - glm::vec2(5, 5), getWidth(), getHeight(), getLOSColour());
 }
 
-void PathNode::Update()
+void PathNode::update()
 {
 }
 
-void PathNode::Clean()
+void PathNode::clean()
 {
 }

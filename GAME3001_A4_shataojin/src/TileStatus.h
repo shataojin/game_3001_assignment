@@ -1,15 +1,15 @@
 #pragma once
-#ifndef __TILE_STATUS__
-#define __TILE_STATUS__
+#ifndef _TILE_STATUS_
+#define _TILE_STATUS_
 
-enum class TileStatus
+enum TileStatus
 {
-	NONE = -1,
 	UNVISITED,
 	OPEN,
 	CLOSED,
+	IMPASSABLE,
 	GOAL,
 	START
 };
 
-#endif /* defined (__TILE_STATUS__) */
+#endif

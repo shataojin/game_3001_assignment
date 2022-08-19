@@ -4,30 +4,35 @@
 
 #include "Scene.h"
 #include "Label.h"
-#include "Ship.h"
+#include "ship.h"
 #include "Button.h"
 
 class StartScene final : public Scene
 {
 public:
 	StartScene();
-	~StartScene() override;
+	~StartScene();
 
 	// Inherited via Scene
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
-	virtual void HandleEvents() override;
-	virtual void Start() override;
-	
+	virtual void draw() override;
+	virtual void update() override;
+	virtual void clean() override;
+	virtual void handleEvents() override;
+	virtual void start() override;
+
 private:
+	Label* m_pStartName;
+	Label* m_pStartStudentN;
+	Label* m_TextLabels;
+	Label* m_TextID;
+	Label* m_pStartName2;
+	Label* m_pStartStudentN2;
 	Label* m_pStartLabel{};
 	Label* m_pInstructionsLabel{};
-	Label* m_TextLabels{};
-	Label* m_TextID{};
+
 	Ship* m_pShip{};
 
-	Button* m_pStartButton{};
+	Button* m_pStartButton;
 };
 
 #endif /* defined (__START_SCENE__) */

@@ -7,30 +7,30 @@ Sprite::Sprite()
 Sprite::~Sprite()
 = default;
 
-SpriteSheet* Sprite::GetSpriteSheet()
+SpriteSheet* Sprite::getSpriteSheet()
 {
 	return m_pSpriteSheet;
 }
 
-Animation& Sprite::GetAnimation(const std::string& name)
+Animation& Sprite::getAnimation(const std::string& name)
 {
 	return m_pAnimations[name];
 }
 
-void Sprite::SetSpriteSheet(SpriteSheet* sprite_sheet)
+void Sprite::setSpriteSheet(SpriteSheet* sprite_sheet)
 {
 	m_pSpriteSheet = sprite_sheet;
 }
 
-void Sprite::SetAnimation(const Animation& animation)
+void Sprite::setAnimation(const Animation& animation)
 {
-	if(!CheckIfAnimationExists(animation.name))
+	if(!m_animationExists(animation.name))
 	{
 		m_pAnimations[animation.name] = animation;
 	}
 }
 
-bool Sprite::CheckIfAnimationExists(const std::string& id)
+bool Sprite::m_animationExists(const std::string& id)
 {
 	return m_pAnimations.find(id) != m_pAnimations.end();
 }

@@ -3,7 +3,7 @@
 
 Health::Health()
 {
-	TextureManager::Instance()->load("../Assets/textures/Health.png", "Health");
+	TextureManager::Instance()->load("../Assets/sprites/Health.png", "Health");
 
 	auto size = TextureManager::Instance()->getTextureSize("Health");
 	setWidth(size.x);

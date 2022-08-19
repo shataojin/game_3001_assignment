@@ -1,46 +1,69 @@
-#pragma once
-#ifndef __TILED_LEVEL__
-#define __TILED_LEVEL__
+﻿#pragma once
+#ifndef _TILED_LEVEL_
+#define _TILED_LEVEL_
 
+#include <fstream>
 #include <map>
 #include <vector>
-#include <string>
-#include "DisplayObject.h"
+
+#include "NavigationAgent.h"
 #include "Tile.h"
 
-class TiledLevel final : public DisplayObject
+class TileC : public Tile
 {
 public:
-	TiledLevel(const std::string& levelMap, const std::string& tileData, const std::string& texturePath,
-		const std::string& textureKey,	const SDL_Point tileSrcSize, const SDL_FPoint tileDstSize,
-		const unsigned short rows = 15, const unsigned short cols = 20,
-		const bool hasNavigation = false, const bool isRendered = true);
-	~TiledLevel() override;
+	TileC(std::string texture, std::string key);
+	bool IsObstacle() { return m_obstacle; }
 
-	// DisplayObject Life-Cycle Functions
-	void Draw() override;
-	void Update() override;
-	void Clean() override;
+	void draw() override ;
+	void update() override {};
+	void clean() override {};
 
-	// Other
-	void SetLabelsEnabled(bool state);
-	[[nodiscard]] Tile* GetTile(unsigned col, unsigned row) const;
-	[[nodiscard]] Tile* GetTile(glm::vec2 pos) const;
-	[[nodiscard]] std::vector<Tile*>& GetLevel();
-	[[nodiscard]] std::vector<Tile*>& GetImpassables();
-	[[nodiscard]] std::vector<Tile*>& GetHazards();
-	[[nodiscard]] bool HasNavigation() const;
+	//void setString(std::string texture);
 
+	
 private:
-	bool m_hasNavigation, m_renderTiles;
-	std::string m_textureKey;
-	int m_rows, m_cols;
-	std::map<char, Tile*> m_tiles; // Map of prototype Tile objects.
-	std::vector<Tile*> m_level; // 1D vector.
-	std::vector<Tile*> m_impassables;
-	std::vector<Tile*> m_hazards;
-
-	void LinkTiles();
+	std::string m_Texture, m_key;
+	bool m_obstacle=false;
 };
 
-#endif /* defined (__TILED_LEVEL__) */
+class TiledLevel :public NavigationAgent
+{
+public:
+	TiledLevel(const unsigned short column, const unsigned short row,
+		const char* tileData, const char* levelData, const char* tileKey);
+	~TiledLevel();
+
+	void draw() override;
+	void update() override {};
+	void clean() override {};
+
+private:
+	const char* m_tileKey;
+	int m_row, m_col;
+	std::map<char, TileC* > m_tiles;
+	//std::vector<std::vector<TileC*>>m_level;
+	std::vector<TileC*> m_obstacles;
+};
+
+class DestructibleObstacle : public TileC
+{
+private:
+	int currentHp;
+public:
+	DestructibleObstacle(int hp, std::string texture, std::string key) : TileC(texture, key)
+	{
+		setType(DESTRUCTABLE);
+		currentHp = hp;
+	}
+	~DestructibleObstacle();
+	
+	void setCurrentHp(int n);
+	int getCurrentHp() const;
+
+	void Destroy();
+};
+
+#endif
+
+

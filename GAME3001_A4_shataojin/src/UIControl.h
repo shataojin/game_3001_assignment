@@ -12,24 +12,24 @@ class UIControl : public DisplayObject
 {
 public:
 	UIControl();
-	~UIControl() override;
+	virtual ~UIControl();
 	
-	virtual void Draw() = 0;
-	virtual void Update() = 0;
-	virtual void Clean() = 0;
+	virtual void draw() = 0;
+	virtual void update() = 0;
+	virtual void clean() = 0;
 
 	typedef std::function<void()> EventHandler;
-	bool AddEventListener(Event event, const EventHandler& handler);
+	bool addEventListener(Event event, const EventHandler& handler);
 
-	EventHandler GetEventHandler(Event event);
+	EventHandler getEventHandler(Event event);
 	
 protected:
-	void OnMouseOver();
-	void OnMouseOut();
-	void OnLeftMouseButtonClick();
+	void onMouseOver();
+	void onMouseOut();
+	void onLeftMouseButtonClick();
 
 private:
-	bool CheckIfEventExists(Event id);
+	bool m_eventExists(Event id);
 
 	// mouse events
 	bool m_mouseOver;

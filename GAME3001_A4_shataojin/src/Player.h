@@ -9,18 +9,18 @@ class Player final : public Sprite
 {
 public:
 	Player();
-	~Player() override;
+	~Player();
 
 	// Life Cycle Methods
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
+	virtual void draw() override;
+	virtual void update() override;
+	virtual void clean() override;
 
 	// setters
-	void SetAnimationState(PlayerAnimationState new_state);
+	void setAnimationState(PlayerAnimationState new_state);
 
 private:
-	void BuildAnimations();
+	void m_buildAnimations();
 
 	PlayerAnimationState m_currentAnimationState;
 };

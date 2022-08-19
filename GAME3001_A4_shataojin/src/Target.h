@@ -2,32 +2,30 @@
 #ifndef __TARGET__
 #define __TARGET__
 
-#include "NavigationObject.h"
-#include "PlayerAnimationState.h"
-#include"Sprite.h"
+#include "DisplayObject.h"
 
-class Target final : public Sprite
-{
+class Target final : public DisplayObject {
 public:
 	Target();
-	~Target() override;
+	~Target();
 
 	// Inherited via GameObject
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
+	virtual void draw() override;
+	virtual void update() override;
+	virtual void clean() override;
 
-	void Reset();
-	void SetAnimationState(PlayerAnimationState new_state);
-	int player_speed = 5;
+	void moveLeft();
+	void moveRight();
+	void moveUp();
+	void moveDown();
+	void stopMovingY();
+	void stopMovingX();
+
 private:
-	void Move();
-	void CheckBounds();
-	void BuildAnimations();
-	PlayerAnimationState m_currentAnimationState;
-	glm::vec2 m_startPos;
-
-
+	void m_checkBounds();
+	void m_reset();
+	const float ACCELERATION = 10.0f;
+	glm::vec2 m_direction;
 };
 
 

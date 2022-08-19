@@ -1,22 +1,19 @@
 #pragma once
 #ifndef __PATH_NODE__
 #define __PATH_NODE__
+#include "NavigationAgent.h"
 
-#include "Agent.h"
-
-class PathNode : public Agent
+class PathNode : public NavigationAgent
 {
 public:
 	PathNode();
 	~PathNode();
 
-	// Inherited via GameObject
-	void Draw() override;
-	void Update() override;
-	void Clean() override;
-
+	// DisplayObject Life Cycle Functions
+	void draw() override;
+	void update() override;
+	void clean() override;
 private:
-
 };
 
 #endif /* defined (__PATH_NODE__) */

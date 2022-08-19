@@ -1,5 +1,4 @@
-// dear imgui: "null" example application
-// (compile and link imgui, create context, run headless with NO INPUTS, NO GRAPHICS OUTPUT)
+// dear imgui: null/dummy example application (compile and link imgui with NO INPUTS, NO OUTPUTS)
 // This is useful to test building, but you cannot interact with anything here!
 #include "imgui.h"
 #include <stdio.h>

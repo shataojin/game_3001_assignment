@@ -1,31 +1,21 @@
 #pragma once
-#ifndef __TREE_NODE__
-#define __TREE_NODE__
+#ifndef _TREE_NODE_
+#define _TREE_NODE_
 #include <string>
-
-#include "Agent.h"
 
 struct TreeNode
 {
-	TreeNode(Agent* agent = nullptr)
-	{
-		m_agent = agent;
-	}
-
+	TreeNode() = default;
 	virtual ~TreeNode() = default;
 
-	std::string m_name;
+	std::string name = "";
+	bool data = false;
 
-	TreeNode* m_pLeft = nullptr;
-	TreeNode* m_pRight = nullptr;
-	TreeNode* m_pParent = nullptr;
-	bool m_isLeaf = false;
-
-	[[nodiscard]] Agent* GetAgent() const { return m_agent; }
-	void SetAgent(Agent* agent) { m_agent = agent; }
-
-protected:
-	Agent* m_agent;
+	TreeNode* Left = nullptr;
+	TreeNode* Right = nullptr;
+	TreeNode* Parent = nullptr;
+	bool isLeaf = false;
 };
 
-#endif /* defined (__TREE_NODE__) */
+#endif
+

@@ -16,38 +16,35 @@ public:
 	virtual ~GameObject();
 
 	// Draw the object
-	virtual void Draw() = 0;
+	virtual void draw() = 0;
 
 	// Update the object
-	virtual void Update() = 0;
-
+	virtual void update() = 0;
+	
 	// remove anything that needs to be deleted
-	virtual void Clean() = 0;
+	virtual void clean() = 0;
 
 	// getters for common variables
-	Transform* GetTransform();
+	Transform* getTransform();
 
 	// getters and setters for physics properties
-	RigidBody* GetRigidBody();
-
+	RigidBody* getRigidBody();
+	
 	// getters and setters for game object properties
-	[[nodiscard]] int GetWidth() const;
-	[[nodiscard]] int GetHeight() const;
-	void SetWidth(int new_width);
-	void SetHeight(int new_height);
-	[[nodiscard]] GameObjectType GetType() const;
-	void SetType(GameObjectType new_type);
+	int getWidth() const;
+	int getHeight() const;
+	void setWidth(int new_width);
+	void setHeight(int new_height);
+	GameObjectType getType() const;
+	void setType(GameObjectType new_type);
 
-	void SetEnabled(bool state);
-	[[nodiscard]] bool IsEnabled() const;
-
-	void SetVisible(bool state);
-	[[nodiscard]] bool IsVisible() const;
+	void setEnabled(bool state);
+	bool isEnabled() const;
 
 private:
 	// transform component
 	Transform m_transform;
-
+	
 	// rigid body component
 	RigidBody m_rigidBody;
 
@@ -57,7 +54,6 @@ private:
 	GameObjectType m_type;
 
 	bool m_enabled;
-	bool m_visible;
 };
 
 #endif /* defined (__GAME_OBJECT__) */

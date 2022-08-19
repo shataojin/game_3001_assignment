@@ -17,46 +17,48 @@
 #include "StartScene.h"
 #include "PlayScene.h"
 #include "EndScene.h"
+#include "WinScene.h"
+#include "LoseScene.h"
 
 #include "Config.h"
-
-#include "ImGuiWindowFrame.h"
 
 class Game
 {
 public:
-	static Game& Instance()
+	
+	static Game* Instance()
 	{
-		static Game instance;
-		return instance;
+		if (s_pInstance == nullptr)
+		{
+			s_pInstance = new Game();
+		}
+		return s_pInstance;
 	}
 
 	// simply set the isRunning variable to true
-	void Init();
-	bool Init(const char* title, int x, int y, int width, int height, bool fullscreen);
+	void init();
+	bool init(const char* title, int x, int y, int width, int height, bool fullscreen);
 
 	// public life cycle functions
-	void Render() const;
-	void Update() const;
-	void HandleEvents() const;
-	void Clean() const;
-	void Start();
-	void Quit();
+	void render() const;
+	void update() const;
+	void handleEvents();
+	void clean() const;
+	void start();
+	void quit();
 
 	// getter and setter functions
-	[[nodiscard]] glm::vec2 GetMousePosition() const;
+	glm::vec2 getMousePosition() const;
+	
+	void setFrames(Uint32 frames);
+	Uint32 getFrames() const;
 
-	void SetFrames(Uint32 frames);
-	[[nodiscard]] Uint32 GetFrames() const;
-
-	[[nodiscard]] float GetDeltaTime() const;
-	void SetDeltaTime(float time);
-
-	[[nodiscard]] bool IsRunning() const;
-	void ChangeSceneState(SceneState new_state);
-
-	[[nodiscard]] SDL_Window* GetWindow() const;
-
+	float getDeltaTime() const;
+	void setDeltaTime(float time);
+	
+	bool isRunning() const;
+	void changeSceneState(SceneState new_state);
+	
 private:
 	Game();
 	~Game();
@@ -64,17 +66,19 @@ private:
 	// game properties
 	bool m_bRunning;
 	Uint32 m_frames;
-	float m_deltaTime{};
+	float m_deltaTime;
 	glm::vec2 m_mousePosition;
 
 	// scene variables
-	Scene* m_pCurrentScene;
+	Scene* m_currentScene;
 	SceneState m_currentSceneState;
 
 	// storage structures
 	std::shared_ptr<SDL_Window> m_pWindow;
+	static Game* s_pInstance;
 };
 
+typedef Game TheGame;
 
 #endif /* defined (__GAME__) */
 

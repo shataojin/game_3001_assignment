@@ -1,16 +1,18 @@
 #pragma once
-#ifndef __MOVE_TO_LOS_ACTION__
-#define __MOVE_TO_LOS_ACTION__
-
+#ifndef _MOVE_TO_LOS_ACTION_
+#define _MOVE_TO_LOS_ACTION_
 #include "ActionNode.h"
 
-class MoveToLOSAction : public ActionNode
+//Interface(virtual function)
+class MoveToLOSAction :public ActionNode
 {
 public:
-	MoveToLOSAction(Agent* agent = nullptr);
+	MoveToLOSAction();
 	virtual ~MoveToLOSAction();
 
-	virtual void Action() override; // Define here
+	virtual void Action() override;
+private:
+
 };
 
-#endif /* defined  (__MOVE_TO_LOS_ACTION__) */
+#endif

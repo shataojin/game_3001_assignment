@@ -8,15 +8,15 @@ class Plane final : public Sprite
 {
 public:
 	Plane();
-	~Plane() override;
+	~Plane();
 
 	// Life Cycle Functions
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
+	virtual void draw() override;
+	virtual void update() override;
+	virtual void clean() override;
 
 private:
-	void BuildAnimations();
+	void m_buildAnimations();
 };
 
 #endif /* defined (__PLANE__) */

@@ -3,54 +3,59 @@
 
 Plane::Plane()
 {
-	TextureManager::Instance().LoadSpriteSheet(
+	TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
 		"../Assets/sprites/atlas.png", 
 		"spritesheet");
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
+	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
 
 	// set frame width
-	SetWidth(65);
+	setWidth(65);
 
 	// set frame height
-	SetHeight(65);
+	setHeight(65);
 
-	GetTransform()->position = glm::vec2(400.0f, 200.0f);
-	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->isColliding = false;
-	SetType(GameObjectType::PLANE);
+	getTransform()->position = glm::vec2(400.0f, 200.0f);
+	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->isColliding = false;
+	setType(PLANE);
 
-	BuildAnimations();
+	m_buildAnimations();
 }
 
 Plane::~Plane()
 = default;
 
-void Plane::Draw()
+void Plane::draw()
 {
+	// alias for x and y
+	const auto x = getTransform()->position.x;
+	const auto y = getTransform()->position.y;
+
 	// draw the plane sprite with simple propeller animation
-	TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("plane"),
-		GetTransform()->position, 0.5f, 0, 255, true);
+	TextureManager::Instance()->playAnimation(
+		"spritesheet", getAnimation("plane"),
+		x, y, 0.5f, 0, 255, true);
 }
 
-void Plane::Update()
+void Plane::update()
 {
 }
 
-void Plane::Clean()
+void Plane::clean()
 {
 }
 
-void Plane::BuildAnimations()
+void Plane::m_buildAnimations()
 {
-	auto plane_animation = Animation();
+	Animation planeAnimation = Animation();
 
-	plane_animation.name = "plane";
-	plane_animation.frames.push_back(GetSpriteSheet()->GetFrame("plane1"));
-	plane_animation.frames.push_back(GetSpriteSheet()->GetFrame("plane2"));
-	plane_animation.frames.push_back(GetSpriteSheet()->GetFrame("plane3"));
+	planeAnimation.name = "plane";
+	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane1"));
+	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane2"));
+	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane3"));
 
-	SetAnimation(plane_animation);
+	setAnimation(planeAnimation);
 }

@@ -8,7 +8,7 @@
 #include "NavigationObject.h"
 #include "Obstacle.h"
 
-class Agent : public NavigationObject
+class Agent : public Sprite
 {
 public:
 	Agent();

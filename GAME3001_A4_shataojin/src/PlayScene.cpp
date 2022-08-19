@@ -119,6 +119,7 @@ void PlayScene::HandleEvents()
 	GetPlayerInput();
 
 	GetKeyboardInput();
+
 }
 
 void PlayScene::GetPlayerInput()
@@ -438,7 +439,7 @@ void PlayScene::Start()
 	AddChild(m_pCCE, 4);
 
 	// Add Obstacles
-	BuildObstaclePool();
+	//BuildObstaclePool();
 
 	// Setup the Grid
 	m_isGridEnabled = false;
@@ -466,8 +467,6 @@ void PlayScene::SpawnEnemyTorpedo()
 {
 	// Set Spawn Point (front of the d7)
 	glm::vec2 spawn_pointR = m_pRCE->GetTransform()->position + m_pRCE->GetCurrentDirection() * 30.0f;
-
-	glm::vec2 spawn_pointC = m_pCCE->GetTransform()->position + m_pCCE->GetCurrentDirection() * 30.0f;
 	// Set Direction of the Torpedo (normalized - unit vector)
 	glm::vec2 torpedo_direction = Util::Normalize(m_pTarget->GetTransform()->position - spawn_pointR);
 

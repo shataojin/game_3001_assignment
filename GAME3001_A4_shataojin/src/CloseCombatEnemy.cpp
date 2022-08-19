@@ -218,13 +218,15 @@ void CloseCombatEnemy::Patrol()
 
 void CloseCombatEnemy::MoveToPlayer()
 {
-	/*auto scene = dynamic_cast<PlayScene*>(m_pScene);*/
-	if(GetActionState() != ActionState::MOVE_TO_PLAYER)
+	(GetActionState() != ActionState::MOVE_TO_PLAYER)
 	{
 		SetActionState(ActionState::MOVE_TO_PLAYER);
 	}
-	//glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
-	//LookWhereIAmGoing(target_direction);
+	auto scene = dynamic_cast<PlayScene*>(m_pScene); // alias
+	SetTargetPosition(scene->GetTarget()->GetTransform()->position);
+	Move();
+
+
 }
 void CloseCombatEnemy::MoveToLOS()
 {
@@ -234,6 +236,32 @@ void CloseCombatEnemy::MoveToLOS()
 	}
 
 	// MoveToLOS Algorithm
+}
+
+
+void CloseCombatEnemy::Attack()
+{
+	auto scene = dynamic_cast<PlayScene*>(m_pScene); // alias
+
+	if (GetActionState() != ActionState::ATTACK)
+	{
+		SetActionState(ActionState::ATTACK);
+
+		// initialize
+		m_meleeCounter = 0;
+	}
+	// Attack Action Algorithm
+
+	// New for Lab 8
+	// Need to get the target object from Play Scene
+	glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
+	LookWhereIAmGoing(target_direction);
+
+	// wait for a number of frames before firing = frame delay
+	/*if (m_meleeCounter++ % m_meleeCounterMax == 0)
+	{
+		std::cout << "melee!!//change me!!" << std::endl;
+	}*/
 }
 
 DecisionTree* CloseCombatEnemy::GetTree() const

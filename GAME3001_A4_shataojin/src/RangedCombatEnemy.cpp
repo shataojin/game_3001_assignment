@@ -13,7 +13,7 @@
 #include "WaitBehindCoverAction.h"
 
 RangedCombatEnemy::RangedCombatEnemy(Scene* scene) : m_maxSpeed(20.0f),
-m_turnRate(5.0f), m_accelerationRate(2.0f),
+m_turnRate(5.0f), m_accelerationRate(0.0f),
 m_fireCounter(0), m_fireCounterMax(60), m_pScene(scene)
 {
 	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "ranged_enemy");
@@ -116,7 +116,7 @@ void RangedCombatEnemy::SetAccelerationRate(const float rate)
 void RangedCombatEnemy::Seek()
 {
 	// Find Next Waypoint if within 10px of the current waypoint
-	if (Util::Distance(m_patrolPath[m_wayPoint], GetTransform()->position) < 10)
+	if (Util::Distance(m_patrolPath[m_wayPoint], GetTransform()->position) < 30)
 	{
 		// check to see if you are at the last point in the path
 		if (++m_wayPoint == m_patrolPath.size())
@@ -287,10 +287,10 @@ void RangedCombatEnemy::Attack()
 	LookWhereIAmGoing(target_direction);
 
 	// wait for a number of frames before firing = frame delay
-	if (m_fireCounter++ % m_fireCounterMax == 0)
+	/*if (m_fireCounter++ % m_fireCounterMax == 0)
 	{
 		scene->SpawnEnemyTorpedo();
-	}
+	}*/
 }
 
 DecisionTree* RangedCombatEnemy::GetTree() const

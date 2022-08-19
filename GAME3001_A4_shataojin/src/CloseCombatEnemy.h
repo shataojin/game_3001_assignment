@@ -37,6 +37,7 @@ public:
 	void Flee() override;
 	void Patrol() override;
 	void MoveToPlayer() override;
+	void Attack() override;
 	DecisionTree* GetTree() const;
 
 private:
@@ -58,6 +59,8 @@ private:
 	// New For Lab 7 part 2
 	DecisionTree* m_tree;
 	void m_buildTree();
+	int m_meleeCounter; // number of frames that have elapsed
+	int m_meleeCounterMax; // frame delay;
 	Scene* m_pScene;
 };
 
